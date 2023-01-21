@@ -6,7 +6,6 @@ tags:
   - name: info
     description: Api information
 
-
 components:
   schemas:
     UsernamePassword:
@@ -16,8 +15,9 @@ components:
         - password
       properties:
         username:
+          description: deve ser único
           type: string
-          minLength: 6
+          minLength: 5
           maxLength: 30
           example: maria
         password:
@@ -25,3 +25,13 @@ components:
           minLength: 8
           example: 12345678
 
+  parameters:
+    Id:
+      in: path
+      name: id
+      description: id
+      required: true
+      schema:
+        type: integer
+        minimum: 0
+      example: 3

@@ -14,6 +14,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
+const BASE_PATH = `${__dirname}/../components`;
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -23,9 +25,9 @@ const swaggerOptions = {
     swaggerDefinition: {
         openapi: "3.0.3",
         info: {
-            title: "Pet Auth Server",
+            title: "Pet Api Server",
             version: "1.0.0",
-            description: "Pet App Authentication Api"
+            description: "Pet App Api"
         },
         servers: [{
             url: "http://localhost:3003/api",
@@ -33,8 +35,8 @@ const swaggerOptions = {
         }]
     },
     apis: [
-        __dirname + "/../components/**/*.yaml",
-        __dirname + "/../components/**/*.mjs"
+        BASE_PATH+"/**/*.yml",
+        BASE_PATH+"/**/*.mjs"
     ]
 };
 
@@ -46,7 +48,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(OpenApiValidator.middleware({
     apiSpec: swaggerDocs,
     operationHandlers: {
-        basePath: __dirname + "/../components",
+        basePath: BASE_PATH,
         resolver
     }
 }));
