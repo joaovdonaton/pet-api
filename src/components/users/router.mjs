@@ -1,4 +1,4 @@
-import {findUserById, saveUser} from "./service.mjs";
+import {authenticateUser, findUserById, findUserByUsername, saveUser} from "./service.mjs";
 import {loadByUsername} from "./repository.mjs";
 
 /**
@@ -50,7 +50,6 @@ export async function get_grupo(req, res, _){
  *       '400':
  *         description: credenciais inválidas (consulte o schema)
  */
-
 export async function create_user(req, res, _){
     if(await loadByUsername(req.body.username)){
         return res.sendStatus(400)
@@ -89,3 +88,41 @@ export async function get_user_by_id(req, res, _){
     return res.json(u);
 }
 
+/**
+ * @openapi
+ * /users/login:
+ *   post:
+ *     summary: realizar login e receber token JWT
+ *
+ *     tags:
+ *       - "auth"
+ *
+ *     operationId: login
+ *     x-eov-operation-handler: users/router
+ *
+ *     requestBody:
+ *       required: true
+ *       description: nome de usuario e senha
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UsernamePassword'
+ *
+ *     responses:
+ *       '200':
+ *         description: login realizado com sucesso
+ *       '400':
+ *         description: falha no login
+ *       '404':
+ *         description: usuário não está cadastrado
+ * */
+export async function login(req, res, _){
+    if(!(await findUserByUsername(req.body.username))){
+        return res.sendStatus(404)
+    }
+
+    const u = await authenticateUser(req.body)
+    if(!u) return res.sendStatus(400)
+
+    return res.json(u)
+}

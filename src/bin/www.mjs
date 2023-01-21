@@ -1,6 +1,16 @@
 #!/usr/bin/env node
 
 /**
+ * Import environment variable dependencies
+ */
+
+import dotenv from 'dotenv'
+import dotenvExpand from 'dotenv-expand'
+
+let myEnv = dotenv.config()
+dotenvExpand.expand(myEnv)
+
+/**
  * Module dependencies.
  */
 

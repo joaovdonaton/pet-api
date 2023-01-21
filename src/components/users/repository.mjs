@@ -1,14 +1,14 @@
 const users = [
     {
         id: 0,
-        username: "joao",
-        password: "123",
+        username: "joaozinho",
+        password: "joaozinho1",
         roles: ["ADMIN", "USER"]
     },
     {
         id: 1,
         username: "pedro",
-        password: "111",
+        password: "iampedro",
         roles: ["USER"]
     }
 ]
@@ -35,4 +35,9 @@ export async function loadById(id){
 
 export async function loadByUsername(username){
     return await formatUser(users.find(u => u.username === username))
+}
+
+// verify credentials
+export async function loadByCredentials(username, password){
+    return formatUser(users.find(u => u.username === username && u.password === password))
 }

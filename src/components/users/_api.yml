@@ -35,3 +35,9 @@ components:
         type: integer
         minimum: 0
       example: 3
+
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
