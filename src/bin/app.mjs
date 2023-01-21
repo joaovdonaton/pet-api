@@ -33,12 +33,10 @@ const swaggerOptions = {
         }]
     },
     apis: [
-        __dirname + "/../users/**/*.yaml",
-        __dirname + "/../users/**/*.mjs"
+        __dirname + "/../components/**/*.yaml",
+        __dirname + "/../components/**/*.mjs"
     ]
 };
-
-console.log(__dirname + "/../users/**/*.mjs")
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 delete swaggerDocs.channels;
@@ -48,7 +46,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(OpenApiValidator.middleware({
     apiSpec: swaggerDocs,
     operationHandlers: {
-        basePath: __dirname + "/../users",
+        basePath: __dirname + "/../components",
         resolver
     }
 }));

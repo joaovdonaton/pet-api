@@ -8,7 +8,7 @@
  *       - "auth"
  *
  *     operationId: get_grupo
- *     x-eov-operation-handler: router
+ *     x-eov-operation-handler: users/router
  *
  *     responses:
  *       '200':
