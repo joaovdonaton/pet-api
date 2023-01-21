@@ -3,3 +3,25 @@ tags:
     description: Authentication routes
   - name: profile
     description: User profile information
+  - name: info
+    description: Api information
+
+
+components:
+  schemas:
+    UsernamePassword:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          minLength: 6
+          maxLength: 30
+          example: maria
+        password:
+          type: string
+          minLength: 8
+          example: 12345678
+
