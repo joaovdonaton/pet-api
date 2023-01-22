@@ -30,7 +30,7 @@ export async function save(user){
 }
 
 export async function loadById(id){
-    return await formatUser(users.find(u => u.id === id))
+    return await formatUser(users.find(u => u.id === Number(id)))
 }
 
 export async function loadByUsername(username){
@@ -40,4 +40,11 @@ export async function loadByUsername(username){
 // verify credentials
 export async function loadByCredentials(username, password){
     return formatUser(users.find(u => u.username === username && u.password === password))
+}
+
+export async function removeUserByUsername(username){
+    const ind = users.findIndex(u => u.username === username)
+    if(ind === -1) return false
+    users.splice(ind, 1)
+    return true
 }

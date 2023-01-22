@@ -1,4 +1,4 @@
-import {loadByCredentials, loadById, loadByUsername, save} from './repository.mjs';
+import {loadByCredentials, loadById, loadByUsername, removeUserByUsername, save} from './repository.mjs';
 import {createToken} from "../../security/jwt.mjs";
 
 export async function saveUser(user){
@@ -21,4 +21,8 @@ export async function authenticateUser(user){
     const token = createToken(authenticatedUser)
 
     return {...authenticatedUser, token}
+}
+
+export async function deleteUserByUsername(username){
+    return await removeUserByUsername(username)
 }

@@ -22,7 +22,7 @@ export function createToken(user) {
         sub: user.id,
         user: {
             id: user.id,
-            login: user.login,
+            username: user.username,
             roles: user.roles
         }
     }

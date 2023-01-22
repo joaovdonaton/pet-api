@@ -1,4 +1,4 @@
-import {authenticateUser, findUserById, findUserByUsername, saveUser} from "./service.mjs";
+import {authenticateUser, deleteUserByUsername, findUserById, findUserByUsername, saveUser} from "./service.mjs";
 import {loadByUsername} from "./repository.mjs";
 
 /**
@@ -125,4 +125,37 @@ export async function login(req, res, _){
     if(!u) return res.sendStatus(400)
 
     return res.json(u)
+}
+
+/**
+ * @openapi
+ * /users/me:
+ *   delete:
+ *     summary: apagar a conta do usuário autenticado
+ *
+ *     tags:
+ *       - "profile"
+ *
+ *     operationId: deleteUser
+ *     x-eov-operation-handler: users/router
+ *
+ *     responses:
+ *       '204':
+ *         description: usuario apagado com sucesso
+ *       '401':
+ *         description: não autenticado
+ *       '404':
+ *         description: usuário não existe
+ *
+ *     security:
+ *       - JWT: ['USER']
+ * */
+export async function deleteUser(req, res, _) {
+    const currentAuth = req.user // criado pelo middleware JWT_SECURITY
+
+    if(await deleteUserByUsername(currentAuth.username)) return res.sendStatus(204)
+    return res.sendStatus(404)
+}
+export async function updateUser(req, res, _){
+
 }
