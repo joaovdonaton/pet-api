@@ -48,3 +48,16 @@ export async function removeUserByUsername(username){
     users.splice(ind, 1)
     return true
 }
+
+// updates user based on id
+export async function update(user){
+    const ind = users.findIndex(u => u.id === Number(user.id))
+    if(ind === -1) return false
+
+    users[ind] = {...user}
+    return user
+}
+
+export async function debug_list(){
+    return users
+}

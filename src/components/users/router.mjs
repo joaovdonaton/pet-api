@@ -1,5 +1,5 @@
 import {authenticateUser, deleteUserByUsername, findUserById, findUserByUsername, saveUser} from "./service.mjs";
-import {loadByUsername} from "./repository.mjs";
+import {debug_list, loadByUsername} from "./repository.mjs";
 
 /**
  * @openapi
@@ -20,6 +20,7 @@ import {loadByUsername} from "./repository.mjs";
  *
 * */
 export async function get_grupo(req, res, _){
+    console.log(debug_list())
     return res.json({"alunos": ['João Vitor Macambira Donaton']})
 }
 
@@ -149,6 +150,32 @@ export async function login(req, res, _){
  *
  *     security:
  *       - JWT: ['USER']
+ *   put:
+ *     summary: atualizar informações do usuário
+ *
+ *     tags:
+ *       - "profile"
+ *
+ *     operationId: updateUser
+ *     x-eov-operation-handler: users/router
+ *
+ *     requestBody:
+ *       required: true
+ *       description: nome de usuario e senha novos
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UsernamePassword'
+ *
+ *
+ *     responses:
+ *       '204':
+ *         description: usuario atualizado com sucesso
+ *       '401':
+ *         description: não autenticado
+ *
+ *     security:
+ *       - JWT: ['USER']
  * */
 export async function deleteUser(req, res, _) {
     const currentAuth = req.user // criado pelo middleware JWT_SECURITY
@@ -157,5 +184,10 @@ export async function deleteUser(req, res, _) {
     return res.sendStatus(404)
 }
 export async function updateUser(req, res, _){
+    const currentAuth = req.user
 
+    const u = await findUserById(currentAuth.id)
+
+    if(await saveUser({...u, ...req.body})) return res.sendStatus(204)
+    return res.sendStatus(404)
 }
