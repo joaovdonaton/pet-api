@@ -2,7 +2,12 @@ import {loadByCredentials, loadById, loadByUsername, removeUserByUsername, save,
 import {createToken} from "../../security/jwt.mjs";
 
 export async function saveUser(user){
-    if(!(await loadById(user.id))) return await save(user); //criar novo usuario caso nao exista
+    const exists = await loadByUsername(user.username);
+    if(!exists) return await save(user);
+    return null
+}
+
+export async function updateUser(user){
     return await update(user)
 }
 

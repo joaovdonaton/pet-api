@@ -24,6 +24,45 @@ components:
           type: string
           minLength: 5
           example: 12345678
+    UserRegister:
+      type: object
+      required:
+        - username
+        - password
+        - name
+      properties:
+        username:
+          description: deve ser único
+          type: string
+          minLength: 5
+          maxLength: 30
+          example: maria
+        password:
+          type: string
+          minLength: 5
+          example: 12345678
+        name:
+          type: string
+          minLength: 5
+          example: Maria de Souza Fernandes
+    UserUpdate:
+      type: object
+      properties:
+        username:
+          description: deve ser único
+          type: string
+          minLength: 5
+          maxLength: 30
+          example: maria
+        password:
+          type: string
+          minLength: 5
+          example: 12345678
+        name:
+          type: string
+          minLength: 5
+          example: Maria de Souza Fernandes
+
 
   parameters:
     Id:

@@ -1,20 +1,3 @@
-// const users = [
-//     {
-//         id: 0,
-//         username: "joaozinho",
-//         password: "joaozinho1",
-//         roles: ["ADMIN", "USER"]
-//     },
-//     {
-//         id: 1,
-//         username: "pedro",
-//         password: "iampedro",
-//         roles: ["USER"]
-//     }
-// ]
-
-// let idCount = users.length-1
-
 import { prisma } from "../../database/database.mjs";
 import bcrypt from 'bcrypt'
 
@@ -34,10 +17,22 @@ export async function formatUser(user){
 export async function save(user){
     if(!user) return null;
 
-    idCount++
-    users.push({...user, id: idCount, roles: ['USER']});
+    user.password = await bcrypt.hash(user.password, await bcrypt.genSalt())
 
-    return user;
+    const createdUser = await prisma.user.create({
+        data: {
+            ...user, 
+            roles: {
+                connect: {
+                    name: 'USER'
+                }
+            }
+        }
+    })
+
+    delete createdUser.password
+
+    return createdUser
 }
 
 export async function loadById(id){
@@ -48,7 +43,6 @@ export async function loadByUsername(username){
     return await prisma.user.findUnique({where: {username: username}, select: {...USER_FIELDS}})
 }
 
-// verify credentials
 export async function loadByCredentials(username, password){
     const user = await prisma.user.findUnique({where: {username: username}, select: {...USER_FIELDS, password: true}})
     if(!user) return null;
@@ -61,17 +55,22 @@ export async function loadByCredentials(username, password){
 }
 
 export async function removeUserByUsername(username){
-    const ind = users.findIndex(u => u.username === username)
-    if(ind === -1) return false
-    users.splice(ind, 1)
-    return true
+    return await prisma.user.delete({
+        where: {
+            username
+        }
+    })
+
 }
 
-// updates user based on id
 export async function update(user){
-    const ind = users.findIndex(u => u.id === Number(user.id))
-    if(ind === -1) return false
 
-    users[ind] = {...user}
-    return user
+    if (user.password) user.password = await bcrypt.hash(user.password, await bcrypt.genSalt())
+
+    return await prisma.user.update({
+        where: {
+            id: user.id
+        },
+        data: user
+    })
 }

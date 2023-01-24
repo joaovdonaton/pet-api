@@ -32,7 +32,7 @@ export function createToken(user) {
 function hasAnyRole(user, roles = []) {
     if (roles.size === 0) return true;
     if (!user || !user.roles) return false;
-    return user.roles.some(r => roles.includes(r))
+    return user.roles.some(r => roles.includes(r.name))
 }
 
 
@@ -82,8 +82,6 @@ export function JWT_SECURITY(req, scopes=[]) {
         throw {status: 401, message: 'Unauthorized'}
     }
 
-    //bug aqui pq as roles não são mais armazenadas assim ['USER', 'ADMIN'], são armazenadas assim [{"name":"ADMIN"},{"name":"USER"}]
-
     if (!hasAnyRole(token.user, scopes)) {
         throw {
             status: 401,
@@ -96,4 +94,9 @@ export function JWT_SECURITY(req, scopes=[]) {
     req.token = token;
     req.user = token.user;
     return true;
+}
+
+//convert roles from [{"name":"ADMIN"},{"name":"USER"}] to this format ['USER', 'ADMIN']
+export function parseRoles(roles){
+
 }

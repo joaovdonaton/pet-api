@@ -1,5 +1,5 @@
-import {authenticateUser, deleteUserByUsername, findUserById, findUserByUsername, saveUser} from "./service.mjs";
-import {debug_list, loadByUsername} from "./repository.mjs";
+import {authenticateUser, deleteUserByUsername, findUserById, findUserByUsername, saveUser, updateUser} from "./service.mjs";
+import {loadByUsername} from "./repository.mjs";
 
 /**
  * @openapi
@@ -20,7 +20,6 @@ import {debug_list, loadByUsername} from "./repository.mjs";
  *
 * */
 export async function get_grupo(req, res, _){
-    console.log(debug_list())
     return res.json({"alunos": ['João Vitor Macambira Donaton']})
 }
 
@@ -42,7 +41,7 @@ export async function get_grupo(req, res, _){
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/components/schemas/UsernamePassword"
+ *             $ref: "#/components/schemas/UserRegister"
  *
  *
  *     responses:
@@ -52,10 +51,11 @@ export async function get_grupo(req, res, _){
  *         description: credenciais inválidas (consulte o schema)
  */
 export async function create_user(req, res, _){
-    if(await loadByUsername(req.body.username)){
-        return res.sendStatus(400)
-    }
-    return res.status(201).json(await saveUser(req.body))
+    const savedUser = await saveUser(req.body);
+
+    if(!savedUser) return res.sendStatus(400)
+
+    return res.status(201).json(savedUser)
 }
 
 /**
@@ -156,7 +156,7 @@ export async function login(req, res, _){
  *     tags:
  *       - "profile"
  *
- *     operationId: updateUser
+ *     operationId: updateUserInfo
  *     x-eov-operation-handler: users/router
  *
  *     requestBody:
@@ -165,14 +165,14 @@ export async function login(req, res, _){
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UsernamePassword'
+ *             $ref: '#/components/schemas/UserUpdate'
  *
  *
  *     responses:
  *       '204':
  *         description: usuario atualizado com sucesso
  *       '401':
- *         description: não autenticado
+ *         description: autenticação inválida
  *
  *     security:
  *       - JWT: ['USER']
@@ -183,11 +183,12 @@ export async function deleteUser(req, res, _) {
     if(await deleteUserByUsername(currentAuth.username)) return res.sendStatus(204)
     return res.sendStatus(404)
 }
-export async function updateUser(req, res, _){
+export async function updateUserInfo(req, res, _){
     const currentAuth = req.user
 
     const u = await findUserById(currentAuth.id)
+    if(!u) return res.sendStatus(401)
 
-    if(await saveUser({...u, ...req.body})) return res.sendStatus(204)
+    if(await updateUser({...req.body, id: u.id})) return res.sendStatus(204)
     return res.sendStatus(404)
 }
