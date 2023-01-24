@@ -82,6 +82,8 @@ export function JWT_SECURITY(req, scopes=[]) {
         throw {status: 401, message: 'Unauthorized'}
     }
 
+    //bug aqui pq as roles não são mais armazenadas assim ['USER', 'ADMIN'], são armazenadas assim [{"name":"ADMIN"},{"name":"USER"}]
+
     if (!hasAnyRole(token.user, scopes)) {
         throw {
             status: 401,
