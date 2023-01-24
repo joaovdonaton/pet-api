@@ -8,7 +8,9 @@ export async function saveUser(user){
 }
 
 export async function updateUser(user){
-    return await update(user)
+    const exists = await loadByUsername(user.username);
+    if(!exists) return await update(user)
+    return null
 }
 
 export async function findUserById(id){

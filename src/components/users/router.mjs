@@ -1,5 +1,4 @@
 import {authenticateUser, deleteUserByUsername, findUserById, findUserByUsername, saveUser, updateUser} from "./service.mjs";
-import {loadByUsername} from "./repository.mjs";
 
 /**
  * @openapi
@@ -80,7 +79,6 @@ export async function create_user(req, res, _){
  *         description: usuário não encontrado
  *       '400':
  *         description: id inválido
- *
  *
  */
 export async function get_user_by_id(req, res, _){
@@ -173,6 +171,8 @@ export async function login(req, res, _){
  *         description: usuario atualizado com sucesso
  *       '401':
  *         description: autenticação inválida
+ *       '400':
+ *         description: dados inválidos (consulte o schema)
  *
  *     security:
  *       - JWT: ['USER']
@@ -190,5 +190,5 @@ export async function updateUserInfo(req, res, _){
     if(!u) return res.sendStatus(401)
 
     if(await updateUser({...req.body, id: u.id})) return res.sendStatus(204)
-    return res.sendStatus(404)
+    return res.sendStatus(400)
 }

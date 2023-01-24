@@ -16,9 +16,21 @@ model User {
   password String
   name     String @default("")
   roles    Role[]
+  pets     Pet[]
 }
 
 model Role {
   name  String @id
   users User[]
+}
+
+model Pet {
+  id          Int    @id @default(autoincrement())
+  name        String
+  nickname    String
+  age         Int
+  animal      String
+  description String
+  owner       User   @relation(fields: [ownerId], references: [id])
+  ownerId     Int
 }
