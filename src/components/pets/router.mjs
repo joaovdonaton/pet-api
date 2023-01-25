@@ -1,4 +1,4 @@
-import { savePet } from "./service.mjs"
+import { getPets, savePet } from "./service.mjs"
 
 /**
  * @openapi
@@ -33,6 +33,7 @@ import { savePet } from "./service.mjs"
  *        - JWT: ['USER']
  *   get:
  *     summary: returns a list of pets available for adoption
+ *     description: return a paginated and ordered (by newest) list of pets
  *     
  *     tags:
  *       - "pets"
@@ -47,6 +48,8 @@ import { savePet } from "./service.mjs"
  *     responses:
  *       '200':
  *          description: pets returned successfully
+ *       '400':
+ *          description: invalid page/limit combination
  */
 export async function create_pet(req, res, _){
     const currentAuth = req.user
@@ -59,5 +62,9 @@ export async function create_pet(req, res, _){
     return res.status(201).json(savedPet)
 }
 export async function list_available_pets(req, res, _){
+    const pets = await getPets(req.query.limit, req.query.page)
     
+    if(pets.length === 0) return res.sendStatus(400)
+
+    return res.json(pets)
 }

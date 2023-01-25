@@ -8,6 +8,14 @@ export async function save(pet){
     })
 }
 
-export async function findAllPets(){
-    
+export async function findAllPets(limit, page){
+    return await prisma.pet.findMany({
+        orderBy: [
+            {
+                createdAt: 'desc'
+            }
+        ],
+        skip: page*limit,
+        take: limit
+    })
 }
