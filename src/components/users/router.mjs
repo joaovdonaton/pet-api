@@ -19,6 +19,9 @@ import {authenticateUser, deleteUserByUsername, findUserById, findUserByUsername
  *
 * */
 export async function get_grupo(req, res, _){
+
+    console.log(await findUserByUsername('maria'))
+
     return res.json({"alunos": ['João Vitor Macambira Donaton']})
 }
 
@@ -191,4 +194,35 @@ export async function updateUserInfo(req, res, _){
 
     if(await updateUser({...req.body, id: u.id})) return res.sendStatus(204)
     return res.sendStatus(400)
+}
+
+/**
+ * @openapi
+ * /users/{id}/pets:
+ *   get:
+ *     summary: retorna uma lista dos pets do usuário
+ *
+ *     tags:
+ *     - "profile"
+ *
+ *     operationId: list_pets
+ *     x-eov-operation-handler: users/router
+ *
+ *     parameters:
+ *       - $ref: '#/components/parameters/Id'
+ *
+ *     responses:
+ *       '200':
+ *         description: lista de pets encontrada com sucesso
+ *       '404':
+ *         description: usuário não encontrado
+ *       '400':
+ *         description: id inválido
+ *
+ */
+export async function list_pets(req, res, _){
+    const u = await findUserById(req.params.id)
+    if(!u) return res.sendStatus(404);
+    
+    return res.json(u.pets)
 }

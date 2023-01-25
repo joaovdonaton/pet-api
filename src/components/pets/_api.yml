@@ -37,4 +37,24 @@ components:
           maximum: 30
           minimum: 1
           example: "pepe"
-        
+  
+  parameters:
+    LimitParam:
+      name: limit
+      description: pet return limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        maximum: 50
+        minimum: 1
+        default: 25
+    PageParam:
+      name: page
+      description: current page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0

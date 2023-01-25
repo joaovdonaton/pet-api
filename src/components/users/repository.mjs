@@ -6,6 +6,7 @@ const USER_FIELDS = {
     username: true, 
     roles: true,
     id: true,
+    pets: true, 
     password: false
 }
 
