@@ -11,12 +11,13 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
+  id       Int             @id @default(autoincrement())
+  username String          @unique
   password String
-  name     String @default("")
+  name     String          @default("")
   roles    Role[]
   pets     Pet[]
+  profile  AdoptionProfile?
 }
 
 model Role {
@@ -25,13 +26,19 @@ model Role {
 }
 
 model Pet {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   nickname    String
   age         Int
   animal      String
   description String
-  owner       User   @relation(fields: [ownerId], references: [id])
+  owner       User     @relation(fields: [ownerId], references: [id])
   ownerId     Int
   createdAt   DateTime @default(now())
+}
+
+model AdoptionProfile {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique
 }
