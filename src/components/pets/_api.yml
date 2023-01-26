@@ -4,6 +4,18 @@ tags:
 
 components:
   schemas:
+    AscDescType:
+      type: string
+      default: desc
+      enum:
+        - asc
+        - desc
+    SortByType:
+      type: string
+      default: createdAt
+      enum: 
+        - age
+        - createdAt
     PetType:
       type: string
       enum:
@@ -63,3 +75,17 @@ components:
         type: integer
         minimum: 0
         default: 0
+    SortByParam:
+      name: sortBy
+      description: field to sort by
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/SortByType'
+    AscDescParam:
+      name: ascDesc
+      description: sortBy ascending or descending
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/AscDescType'

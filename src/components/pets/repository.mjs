@@ -8,12 +8,13 @@ export async function save(pet){
     })
 }
 
-export async function findAllPets(limit, page){
+export async function findAllPets(limit, page, sortBy, ascDesc){
+    const orderByObj = {}
+    orderByObj[sortBy] = ascDesc
+
     return await prisma.pet.findMany({
         orderBy: [
-            {
-                createdAt: 'desc'
-            }
+            orderByObj
         ],
         skip: page*limit,
         take: limit

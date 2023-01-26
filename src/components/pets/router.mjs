@@ -33,7 +33,7 @@ import { getPets, savePet } from "./service.mjs"
  *        - JWT: ['USER']
  *   get:
  *     summary: returns a list of pets available for adoption
- *     description: return a paginated and ordered (by newest) list of pets
+ *     description: return a paginated and ordered list of pets
  *     
  *     tags:
  *       - "pets"
@@ -44,6 +44,8 @@ import { getPets, savePet } from "./service.mjs"
  *     parameters:
  *       - $ref: "#/components/parameters/LimitParam"
  *       - $ref: "#/components/parameters/PageParam"
+ *       - $ref: "#/components/parameters/SortByParam"
+ *       - $ref: "#/components/parameters/AscDescParam"
  * 
  *     responses:
  *       '200':
@@ -62,7 +64,7 @@ export async function create_pet(req, res, _){
     return res.status(201).json(savedPet)
 }
 export async function list_available_pets(req, res, _){
-    const pets = await getPets(req.query.limit, req.query.page)
+    const pets = await getPets(req.query.limit, req.query.page, req.query.sortBy, req.query.ascDesc)
     
     if(pets.length === 0) return res.sendStatus(400)
 
