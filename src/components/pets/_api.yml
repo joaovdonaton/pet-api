@@ -4,6 +4,11 @@ tags:
 
 components:
   schemas:
+    PetType:
+      type: string
+      enum:
+        - cat
+        - dog
     PetRegister:
       type: object
       required: 
@@ -23,7 +28,7 @@ components:
         animal:
           description: tipo do animal
           type: string
-          enum: [dog, cat]
+          enum: [cat, dog]
           example: "cat"
         description:
           description: descrição do pet
