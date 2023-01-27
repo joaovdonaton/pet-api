@@ -1,3 +1,4 @@
+import { notFound, unauthorized } from "../../security/errors.mjs";
 import {authenticateUser, deleteUserByUsername, findUserById, findUserByUsername, saveUser, updateUser} from "./service.mjs";
 
 /**
@@ -19,9 +20,6 @@ import {authenticateUser, deleteUserByUsername, findUserById, findUserByUsername
  *
 * */
 export async function get_grupo(req, res, _){
-
-    console.log(await findUserByUsername('maria'))
-
     return res.json({"alunos": ['João Vitor Macambira Donaton']})
 }
 
@@ -86,7 +84,7 @@ export async function create_user(req, res, _){
  */
 export async function get_user_by_id(req, res, _){
     const u = await findUserById(req.params.id)
-    if(!u) return res.sendStatus(404);
+    if(!u) throw notFound(req.params.id)
     return res.json(u);
 }
 
@@ -115,16 +113,13 @@ export async function get_user_by_id(req, res, _){
  *         description: login realizado com sucesso
  *       '400':
  *         description: falha no login
+ *       '401':
+ *         description: credenciais inválidas
  *       '404':
  *         description: usuário não está cadastrado
  * */
 export async function login(req, res, _){
-    if(!(await findUserByUsername(req.body.username))){
-        return res.sendStatus(404)
-    }
-
     const u = await authenticateUser(req.body)
-    if(!u) return res.sendStatus(400)
 
     return res.json(u)
 }
@@ -190,7 +185,7 @@ export async function updateUserInfo(req, res, _){
     const currentAuth = req.user
 
     const u = await findUserById(currentAuth.id)
-    if(!u) return res.sendStatus(401)
+    if(!u) throw unauthorized("Invalid Authentication")
 
     if(await updateUser({...req.body, id: u.id})) return res.sendStatus(204)
     return res.sendStatus(400)
@@ -222,7 +217,7 @@ export async function updateUserInfo(req, res, _){
  */
 export async function list_pets(req, res, _){
     const u = await findUserById(req.params.id)
-    if(!u) return res.sendStatus(404);
+    if(!u) throw notFound(req.params.id);
     
     return res.json(u.pets)
 }

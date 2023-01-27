@@ -1,17 +1,17 @@
 import {loadByCredentials, loadById, loadByUsername, removeUserByUsername, save, update} from './repository.mjs';
 import {createToken} from "../../security/jwt.mjs";
+import { badRequest } from '../../security/errors.mjs';
 
 export async function saveUser(user){
     const exists = await loadByUsername(user.username);
     if(!exists) return await save(user);
-    return null
+    throw badRequest("User already exists: " + user.username)
 }
 
 export async function updateUser(user){
     const exists = await loadByUsername(user.username);
     if(!exists) return await update(user)
-    return null
-}
+    throw badRequest("User already exists: " + user.username)}
 
 export async function findUserById(id){
     return await loadById(id);

@@ -1,3 +1,5 @@
+import { NotFound } from "express-openapi-validator/dist/framework/types.js"
+import { BadRequest } from "express-openapi-validator/dist/openapi.validator.js"
 import { getPets, savePet } from "./service.mjs"
 
 /**
@@ -50,8 +52,8 @@ import { getPets, savePet } from "./service.mjs"
  *     responses:
  *       '200':
  *          description: pets returned successfully
- *       '400':
- *          description: invalid page/limit combination
+ *       '404':
+ *          description: no results
  */
 export async function create_pet(req, res, _){
     const currentAuth = req.user
@@ -66,7 +68,7 @@ export async function create_pet(req, res, _){
 export async function list_available_pets(req, res, _){
     const pets = await getPets(req.query.limit, req.query.page, req.query.sortBy, req.query.ascDesc)
     
-    if(pets.length === 0) return res.sendStatus(400)
+    if(pets.length === 0) throw NotFound("No results")
 
     return res.json(pets)
 }

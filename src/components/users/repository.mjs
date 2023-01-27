@@ -1,5 +1,6 @@
 import { prisma } from "../../database/database.mjs";
 import bcrypt from 'bcrypt'
+import { notFound, unauthorized } from "../../security/errors.mjs";
 
 const USER_FIELDS = {
     name: true,
@@ -46,9 +47,9 @@ export async function loadByUsername(username){
 
 export async function loadByCredentials(username, password){
     const user = await prisma.user.findUnique({where: {username: username}, select: {...USER_FIELDS, password: true}})
-    if(!user) return null;
+    if(!user) throw notFound("User not found: " + username);
 
-    if(!await bcrypt.compare(password, user.password)) return null
+    if(!await bcrypt.compare(password, user.password)) throw unauthorized('Invalid Credentials')
 
     delete user.password
 

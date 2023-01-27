@@ -17,10 +17,10 @@ model User {
   name     String          @default("")
   roles    Role[]
   pets     Pet[]
-  profile  AdoptionProfile?
+ // profile  AdoptionProfile?
 }
 
-model Role {
+model Role {  
   name  String @id
   users User[]
 }
@@ -37,8 +37,8 @@ model Pet {
   createdAt   DateTime @default(now())
 }
 
-model AdoptionProfile {
-  id     Int  @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id])
-  userId Int  @unique
-}
+//model AdoptionProfile {
+  //id     Int  @id @default(autoincrement())
+  //user   User @relation(fields: [userId], references: [id])
+  //userId Int  @unique
+//}
