@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import axios from "axios";
 import bcrypt from "bcrypt";
+import { getCEPData } from "../util/util.mjs";
 
 export const prisma = new PrismaClient();
 
@@ -130,7 +132,7 @@ async function makePets() {
             data: {
                 name: names[i],
                 nickname: nicknames[i],
-                animal: animalType[i],
+                typeId: animalType[i],
                 age: age[i],
                 description: description[i],
                 ownerId: ownerIds[i],
@@ -138,6 +140,53 @@ async function makePets() {
         });
         console.log(`Mock pet ${names[i]} created`);
     }
+}
+
+async function makePetType(name) {
+    let exists = await prisma.petType.findUnique({ where: { name } });
+    if (exists) {
+        console.log(`Pet Type ${name} found`);
+        return;
+    }
+
+    await prisma.petType.create({ data: { name } });
+    console.log(`Pet Type ${name} created`);
+}
+
+async function makeAdoptionProfile(username, data){
+    const u = await prisma.user.findFirst({where: {username}, include: {profile: true}})
+    if(!u) {
+        console.log(`Could not create adoption profile for ${username}, user does not exist`)
+        return
+    }
+    else if(u.profile){
+        console.log(`Adoption profile for ${username} already exists`)
+        return
+    }
+
+    if((!data.state || !data.city || !data.district) && data.cep){
+        const cepData = await getCEPData(data.cep)
+        data.state = cepData.uf
+        data.city = cepData.localidade,
+        data.district = cepData.bairro
+    }
+
+    console.log(data)
+
+    await prisma.adoptionProfile.create({
+        data: {
+            userId: u.id,
+            cep: data.cep,
+            preferedTypes: data.preferedTypes,
+            description: data.description,
+            newPetOwner: data.newPetOwner,
+            state: data.state,
+            district: data.district,
+            city: data.city
+        }
+    })
+
+    console.log(`Mock adoption profile successfully created for ${username}`)
 }
 
 export async function bootstrapDb() {
@@ -148,7 +197,14 @@ export async function bootstrapDb() {
     await makeAdmin();
 
     await makeUsers();
+
+    await makePetType("dog");
+    await makePetType("cat");
+
     await makePets();
+
+    await makeAdoptionProfile("joseph400", {cep: '80250-220', newPetOwner: true})
+    await makeAdoptionProfile("iamarnold", {cep: '66075-110', newPetOwner: true})
 
     console.log("Done!");
 }

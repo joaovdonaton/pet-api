@@ -26,7 +26,7 @@ components:
       required: 
         - name
         - age
-        - animal
+        - typeId
       properties:
         name:
           type: string 
@@ -37,7 +37,7 @@ components:
           type: integer
           minimum: 0 
           maximum: 50
-        animal:
+        typeId:
           description: tipo do animal
           type: string
           enum: [cat, dog]
