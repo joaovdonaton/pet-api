@@ -56,4 +56,5 @@ model AdoptionProfile {
   district      String?
   longitude     Float   @default(0.0)
   latitude      Float   @default(0.0)
+  viewed Json? @default("[]")
 }

@@ -15,3 +15,14 @@ export async function findProfileByUserId(userId){
         }
     })
 }
+
+export async function update(profile){
+    return await prisma.adoptionProfile.update({
+        where: {
+            userId: profile.userId
+        },
+        data: {
+            ...profile
+        }
+    })
+}

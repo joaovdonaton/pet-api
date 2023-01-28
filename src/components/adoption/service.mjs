@@ -1,5 +1,6 @@
-import { badRequest } from "../../security/errors.mjs";
+import { badRequest, notFound } from "../../security/errors.mjs";
 import { getCEPData, getLongLat } from "../../util/util.mjs";
+import { update } from "../adoption/repository.mjs";
 import { findProfileByUserId, save } from "./repository.mjs";
 
 export async function saveProfile(profile){
@@ -19,4 +20,11 @@ export async function saveProfile(profile){
     profile.district = cepData.district
 
     return await save(profile)
+}
+
+export async function updateProfile(profile){
+    const exists = await findProfileByUserId(profile.userId)
+    if(!exists) throw notFound(`Profile not found for id ${profile.userId}`)
+
+    return await update(profile)
 }
