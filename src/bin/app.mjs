@@ -12,6 +12,7 @@ import resolver from './esmresolver.mjs';
 import {JWT_SECURITY} from "../security/jwt.mjs";
 import { bootstrapDb } from '../database/database.mjs';
 import { errorHandler } from '../security/errors.mjs';
+import { logHandler } from '../security/logging.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -19,7 +20,7 @@ const app = express();
 
 const BASE_PATH = `${__dirname}/../components`;
 
-app.use(logger('dev'));
+//app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -61,6 +62,7 @@ app.use(OpenApiValidator.middleware({
     }
 }));
 
+app.use(logHandler)
 app.use(errorHandler)
 
 app.use(express.static(`${__dirname}/public`));
