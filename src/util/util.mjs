@@ -15,7 +15,14 @@ export async function getCEPData(cep){
 
     if(res.status !== 200) throw new ServerError("Failed to fetch CEP data", 500)
 
-    return res.data
+    const newData = {}
+    newData.street = res.data.logradouro
+    newData.city = res.data.localidade
+    newData.district = res.data.bairro
+    newData.state = res.data.uf
+    newData.cep = res.data.cep
+
+    return newData
 }
 
 export async function validateCEP(cep){
@@ -28,6 +35,9 @@ export async function validateCEP(cep){
     return null
 }
 
-export async function getLongLat(address){
-    
+export async function getLongLat({city='', state='', district='', street=''}){
+    const {latitude, longitude} = (await geocoder.geocode(`${street}, ${district}, ${state}, ${city}`))[0]
+
+
+    return {latitude, longitude}
 }

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `adoptionprofile` ADD COLUMN `Latitude` DOUBLE NOT NULL DEFAULT 0.0,
+    ADD COLUMN `Longitute` DOUBLE NOT NULL DEFAULT 0.0;

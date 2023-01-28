@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import axios from "axios";
 import bcrypt from "bcrypt";
-import { getCEPData } from "../util/util.mjs";
+import { getCEPData, getLongLat } from "../util/util.mjs";
 
 export const prisma = new PrismaClient();
 
@@ -164,12 +164,14 @@ async function makeAdoptionProfile(username, data){
         return
     }
 
-    if((!data.state || !data.city || !data.district) && data.cep){
-        const cepData = await getCEPData(data.cep)
-        data.state = cepData.uf
-        data.city = cepData.localidade,
-        data.district = cepData.bairro
-    }
+    const cepData = await getCEPData(data.cep)
+
+    data.state = cepData.state
+    data.city = cepData.city,
+    data.district = cepData.district
+
+    const {latitude, longitude} = await getLongLat({state: data.state, city: data.city, district: data.district})
+
 
     await prisma.adoptionProfile.create({
         data: {
@@ -180,7 +182,9 @@ async function makeAdoptionProfile(username, data){
             newPetOwner: data.newPetOwner,
             state: data.state,
             district: data.district,
-            city: data.city
+            city: data.city,
+            longitude: longitude,
+            latitude: latitude
         }
     })
 
