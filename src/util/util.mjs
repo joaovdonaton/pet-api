@@ -36,8 +36,10 @@ export async function validateCEP(cep){
 }
 
 export async function getLongLat({city='', state='', district='', street=''}){
-    const {latitude, longitude} = (await geocoder.geocode(`${street}, ${district}, ${state}, ${city}`))[0]
+    const res = (await geocoder.geocode(`${street}, ${district}, ${city}, ${state}`))[0]
+    if(!res) throw new ServerError("Failed to fetch google api data", 500)
 
+    const {latitude, longitude} = res
 
     return {latitude, longitude}
 }
