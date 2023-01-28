@@ -1,3 +1,4 @@
 .idea
 pet-auth-api.iml
 node_modules
+.env

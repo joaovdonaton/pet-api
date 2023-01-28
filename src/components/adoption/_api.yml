@@ -1,0 +1,27 @@
+tags:
+  - name: "adoption"
+    description: adoption matcher and adoption profile management
+
+components:
+  schemas:
+    AdoptionProfileRegister:
+      type: object
+      required:
+        - newPetOwner
+        - cep
+      properties:
+        cep:
+          type: string
+          minLength: 8
+          maxLength: 9
+          example: 80250-220
+        preferedTypes:
+          type: array
+          example: [cat, dog]
+        description:
+          type: string
+          minLength: 50
+          maxLength: 500
+        newPetOwner:
+          type: boolean
+          example: true

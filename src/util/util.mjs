@@ -1,5 +1,11 @@
 import axios from "axios"
 import { ServerError } from '../security/errors.mjs'
+import NodeGeocoder from 'node-geocoder'
+
+export const geocoder = NodeGeocoder({
+    provider: 'google',
+    apiKey: process.env.GOOGLE_API_KEY
+})
 
 export async function getCEPData(cep){
     if(!validateCEP(cep)) return null
@@ -20,4 +26,8 @@ export async function validateCEP(cep){
         return cep
     }
     return null
+}
+
+export async function getLongLat(address){
+    
 }

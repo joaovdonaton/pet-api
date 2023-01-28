@@ -201,8 +201,8 @@ export async function bootstrapDb() {
 
     await makePets();
 
-    await makeAdoptionProfile("joseph400", {cep: '80250-220', newPetOwner: true, preferedTypes: "['cat']"})
-    await makeAdoptionProfile("iamarnold", {cep: '66075-110', newPetOwner: true, preferedTypes: "['cat', 'dog']"})
+    await makeAdoptionProfile("joseph400", {cep: '80250-220', newPetOwner: true, preferedTypes: ['cat']})
+    await makeAdoptionProfile("iamarnold", {cep: '66075-110', newPetOwner: true, preferedTypes: ['cat', 'dog']})
 
     console.log("Done!");
 }
