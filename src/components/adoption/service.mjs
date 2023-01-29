@@ -59,25 +59,38 @@ export async function getNextMatches(userId, limit){
     até que a lista seja preenchida
     */
 
-    console.log(await getAllPetsInArea('global', 'centro'))
+    //console.log(await getAllPetsInArea('district', 'centro', {district: profile.district, city: profile.city, state:profile.state}))
 
-    return []
+    //return []
 
     const pets = []
     const searchOrder = ['district', 'city', 'state']
 
     for(let i = 0; i < searchOrder.length; i++){
-        const petsInSameArea = await 
-        profile[searchOrder[i]]
+        const petsInSameArea = await getAllPetsInArea(searchOrder[i], profile[searchOrder[i]], {district: profile.district, city: profile.city, state:profile.state})
+        console.log(`getting all pets in the same ${searchOrder[i]}: ${profile[searchOrder[i]]}`)
+        console.log('Results:')
+        console.log(petsInSameArea)
     }
 
     return pets
 }
 
 // area => district, city, state or global
-export async function getProfilesByArea(area='global', areaName=''){
+// details => {district, city, state} (required to avoid problems such as having a district with the same name in two different cities)
+export async function getProfilesByArea(area='global', areaName='', details={district:'', city:'', state:''}){
     if(!["district", "city", "state", "global"].includes(area)) throw new ServerError("Invalid Area", 500)
-    const params = {}
-    if(area!=='global') params[area] = areaName
+    const params = {...details}
+    if(area === 'global'){
+        params = {}
+    }
+    else if(area === 'city'){
+        delete params.district
+    }
+    else if(area === 'state'){
+        delete params.district
+        delete params.city
+    }
+
     return await findProfilesByParams(params)
 }

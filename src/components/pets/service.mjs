@@ -11,8 +11,9 @@ export async function getPets(limit, page, sortBy, ascDesc){
 }
 
 // area => district, city, state or global
-export async function getAllPetsInArea(area='global', areaName){
-    const profiles = await getProfilesByArea(area, areaName)
+// details => {district, city, state} (required to avoid problems such as having a district with the same name in two different cities)
+export async function getAllPetsInArea(area='global', areaName, details={district:'', city:'', state:''}){
+    const profiles = await getProfilesByArea(area, areaName, details)
 
     const allPets = []
     for(let profile of profiles){
