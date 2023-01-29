@@ -7,7 +7,7 @@ const USER_FIELDS = {
     username: true, 
     roles: true,
     id: true,
-    pets: true, 
+    pets: false, 
     password: false,
     profile: true
 }
@@ -40,6 +40,10 @@ export async function save(user){
 
 export async function loadById(id){
     return await prisma.user.findUnique({where: {id: Number(id)}, select: {...USER_FIELDS}})
+}
+
+export async function LoadByIdWithPetData(id){
+    return await prisma.user.findUnique({where: {id: Number(id)}, select: {...USER_FIELDS, pets: true}})
 }
 
 export async function loadByUsername(username){

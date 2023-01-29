@@ -1,4 +1,4 @@
-import {loadByCredentials, loadById, loadByUsername, removeUserByUsername, save, update} from './repository.mjs';
+import {loadByCredentials, loadById, LoadByIdWithPetData, loadByUsername, removeUserByUsername, save, update} from './repository.mjs';
 import {createToken} from "../../security/jwt.mjs";
 import { badRequest } from '../../security/errors.mjs';
 
@@ -15,6 +15,10 @@ export async function updateUser(user){
 
 export async function findUserById(id){
     return await loadById(id);
+}
+
+export async function findUserByIdWithPetData(id){
+    return await LoadByIdWithPetData(id);
 }
 
 export async function findUserByUsername(username){

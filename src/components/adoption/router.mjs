@@ -113,5 +113,5 @@ export async function find_next_match(req, res, next){
 
     const matches = await getNextMatches(currentAuth.id, req.query.limit);
 
-    res.sendStatus(200)
+    res.status(200).json(matches)
 }

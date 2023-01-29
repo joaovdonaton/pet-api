@@ -1,11 +1,14 @@
 import axios from "axios"
 import { ServerError } from '../security/errors.mjs'
 import NodeGeocoder from 'node-geocoder'
+import geodesic from "geographiclib-geodesic"
 
 export const geocoder = NodeGeocoder({
     provider: 'google',
     apiKey: process.env.GOOGLE_API_KEY
 })
+
+export const geod = geodesic.Geodesic.WGS84
 
 export async function getCEPData(cep){
     if(!validateCEP(cep)) return null
@@ -42,4 +45,8 @@ export async function getLongLat({city='', state='', district='', street=''}){
     const {latitude, longitude} = res
 
     return {latitude, longitude}
+}
+
+export async function getGeoDistance(lat1, long1, lat2, long2){
+    return geod.Inverse(lat1,long1,lat2,long2)
 }

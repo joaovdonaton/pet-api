@@ -1,5 +1,5 @@
 import { badRequest, notFound, ServerError, unauthorized } from "../../security/errors.mjs";
-import { getCEPData, getLongLat } from "../../util/util.mjs";
+import { getCEPData, getGeoDistance, getLongLat } from "../../util/util.mjs";
 import { findProfilesByParams, update } from "../adoption/repository.mjs";
 import { findProfileByUserId, save } from "./repository.mjs";
 import {findUserById} from '../users/service.mjs'
@@ -47,8 +47,6 @@ export async function getNextMatches(userId, limit){
     const profile = user.profile
     if(!profile) throw badRequest(`User ${user.username} (id ${user.id}) does not have an adoption profile`)
 
-    const viewedPetIds = profile.viewed
-
     /* Como vai funcionar o algoritmo para encontrar os matches:
     
     - Primeiro pegar todos os pets que se encontram no mesmo District que está no AdoptionProfile atual
@@ -59,19 +57,53 @@ export async function getNextMatches(userId, limit){
     até que a lista seja preenchida
     */
 
-    //console.log(await getAllPetsInArea('district', 'centro', {district: profile.district, city: profile.city, state:profile.state}))
 
-    //return []
-
-    const pets = []
+    let pets = []
     const searchOrder = ['district', 'city', 'state']
 
+    // encontrar pets próximos
     for(let i = 0; i < searchOrder.length; i++){
         const petsInSameArea = await getAllPetsInArea(searchOrder[i], profile[searchOrder[i]], {district: profile.district, city: profile.city, state:profile.state})
-        console.log(`getting all pets in the same ${searchOrder[i]}: ${profile[searchOrder[i]]}`)
-        console.log('Results:')
-        console.log(petsInSameArea)
+        //console.log(`getting all pets in the same ${searchOrder[i]}: ${profile[searchOrder[i]]}`)
+        //console.log('Results:')
+        //console.log(petsInSameArea)
+
+        for(let pet of petsInSameArea){
+            if(!profile.viewed.includes(pet.id) && pet.ownerId !== profile.userId){
+                const distance = parseInt((await (getGeoDistance(pet.latitude, pet.longitude, profile.latitude, profile.longitude))).s12)
+                pet.distance = distance 
+
+                if(pets.length < limit){
+                    pets.push(pet)
+                    profile.viewed.push(pet.id)
+                }
+                else break
+            }
+        }
+        if(pets.length === limit) break
     }
+
+    //atualizar pets já vistos pelo AdoptionProfile atual
+    const u = await update(profile)
+
+
+
+    //ordenar por distância, caso seja igual (mesmo bairro, cidade e estado), Ordenar por preferência
+    pets = pets.sort((a, b) => {
+        const diff = a.distance - b.distance
+
+        // distancia igual, ordenar por preferencia
+        if(diff === 0){
+            const hasA = profile.preferedTypes.includes(a.typeId), hasB = profile.preferedTypes.includes(b.typeId);
+
+            if(hasA && hasB) return 0
+            if (hasA) return -1
+            return 1
+        }
+
+        return diff
+    })
+
 
     return pets
 }
