@@ -26,3 +26,11 @@ export async function update(profile){
         }
     })
 }
+
+export async function findProfilesByParams(params){
+    return await prisma.adoptionProfile.findMany({
+        where: {
+            ...params
+        }
+    })
+}

@@ -25,3 +25,15 @@ components:
         newPetOwner:
           type: boolean
           example: true
+
+  parameters:
+    MatchLimit:
+      name: limit
+      description: amount of matches to get
+      in: query
+      required: false
+      schema:
+        type: integer
+        maximum: 10
+        minimum: 1
+        default: 1

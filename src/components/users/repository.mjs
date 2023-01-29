@@ -8,7 +8,8 @@ const USER_FIELDS = {
     roles: true,
     id: true,
     pets: true, 
-    password: false
+    password: false,
+    profile: true
 }
 
 export async function formatUser(user){

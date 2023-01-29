@@ -1,4 +1,4 @@
-import { saveProfile, updateProfile } from "./service.mjs"
+import { getNextMatches, saveProfile, updateProfile } from "./service.mjs"
 
 /**
  * @openapi
@@ -87,26 +87,31 @@ export async function update_profile(req, res, next){
  * @openapi
  * /adoption/matcher:
  *   get:
- *     summary: retorna o próximo match do usuário autenticado
+ *     summary: retorna um ou mais dos próximos matches do usuário autenticado
  *     description: utiliza o Adoption Profile do usuário atualmente autenticado para encontrar pets que se encaixam com o seu perfil
  *
  *     tags:
  *     - "adoption"
  *
- *     operationId: get_user_by_id
- *     x-eov-operation-handler: users/router
+ *     operationId: find_next_match
+ *     x-eov-operation-handler: adoption/router
  *
  *     parameters:
- *       - $ref: '#/components/parameters/Id'
+ *       - $ref: '#/components/parameters/MatchLimit'
  *
  *     responses:
  *       '200':
- *         description: "usuário encontrado com sucesso"
- *       '404':
- *         description: usuário não encontrado
- *       '400':
- *         description: id inválido
+ *         description: matches encontrado com sucesso
+ *       '401':
+ *         description: autenticação inválida
  * 
  *     security:
  *       - JWT: ['USER']
  */
+export async function find_next_match(req, res, next){
+    const currentAuth = req.user
+
+    const matches = await getNextMatches(currentAuth.id, req.query.limit);
+
+    res.sendStatus(200)
+}
