@@ -11,13 +11,15 @@ datasource db {
 }
 
 model User {
-  id       Int              @id @default(autoincrement())
-  username String           @unique
-  password String
-  name     String           @default("")
-  roles    Role[]
-  pets     Pet[]
-  profile  AdoptionProfile?
+  id               Int               @id @default(autoincrement())
+  username         String            @unique
+  password         String
+  name             String            @default("")
+  roles            Role[]
+  pets             Pet[]
+  profile          AdoptionProfile?
+  incomingRequests AdoptionRequest[] @relation("receiver")
+  outgoingRequests AdoptionRequest[] @relation("sender")
 }
 
 model Role {
@@ -26,16 +28,17 @@ model Role {
 }
 
 model Pet {
-  id          Int      @id @default(autoincrement())
+  id          Int               @id @default(autoincrement())
   name        String
   nickname    String
   age         Int
   description String
-  owner       User     @relation(fields: [ownerId], references: [id])
+  owner       User              @relation(fields: [ownerId], references: [id])
   ownerId     Int
-  createdAt   DateTime @default(now())
-  type        PetType  @relation(fields: [typeId], references: [name])
-  typeId      String   @default("dog")
+  createdAt   DateTime          @default(now())
+  type        PetType           @relation(fields: [typeId], references: [name])
+  typeId      String            @default("dog")
+  requests    AdoptionRequest[]
 }
 
 model PetType {
@@ -56,5 +59,18 @@ model AdoptionProfile {
   district      String?
   longitude     Float   @default(0.0)
   latitude      Float   @default(0.0)
-  viewed Json? @default("[]")
+  viewed        Json?   @default("[]")
+}
+
+model AdoptionRequest {
+  id         Int     @id @default(autoincrement())
+  sender     User    @relation("sender", fields: [senderId], references: [id])
+  senderId   Int
+  receiver   User    @relation("receiver", fields: [receiverId], references: [id])
+  receiverId Int
+  pet        Pet     @relation(fields: [petId], references: [id])
+  petId      Int
+  title      String
+  message    String
+  accepted   Boolean @default(false)
 }

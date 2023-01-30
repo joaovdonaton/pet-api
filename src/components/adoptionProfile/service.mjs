@@ -1,6 +1,6 @@
 import { badRequest, notFound, ServerError, unauthorized } from "../../security/errors.mjs";
 import { getCEPData, getGeoDistance, getLongLat } from "../../util/util.mjs";
-import { findProfilesByParams, update } from "../adoption/repository.mjs";
+import { findProfilesByParams, update } from "../adoptionProfile/repository.mjs";
 import { findProfileByUserId, save } from "./repository.mjs";
 import {findUserById} from '../users/service.mjs'
 import { getAllPetsInArea } from "../pets/service.mjs";
@@ -85,8 +85,6 @@ export async function getNextMatches(userId, limit){
 
     //atualizar pets já vistos pelo AdoptionProfile atual
     const u = await update(profile)
-
-
 
     //ordenar por distância, caso seja igual (mesmo bairro, cidade e estado), Ordenar por preferência
     pets = pets.sort((a, b) => {

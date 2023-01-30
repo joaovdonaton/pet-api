@@ -20,3 +20,11 @@ export async function findAllPets(limit, page, sortBy, ascDesc){
         take: limit
     })
 }
+
+export async function findPetById(id){
+    return await prisma.pet.findFirst({
+        where:{
+            id
+        }
+    })
+}

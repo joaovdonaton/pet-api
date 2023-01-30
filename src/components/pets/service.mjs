@@ -1,4 +1,4 @@
-import { getProfilesByArea } from "../adoption/service.mjs";
+import { getProfilesByArea } from "../adoptionProfile/service.mjs";
 import { findUserById, findUserByIdWithPetData } from "../users/service.mjs";
 import {findAllPets, save} from "./repository.mjs";
 
@@ -8,6 +8,10 @@ export async function savePet(pet){
 
 export async function getPets(limit, page, sortBy, ascDesc){
     return await findAllPets(limit, page, sortBy, ascDesc)
+}
+
+export async function getPetById(id){
+    return await findPetById(id)
 }
 
 // area => district, city, state or global

@@ -10,7 +10,7 @@ import { getNextMatches, saveProfile, updateProfile } from "./service.mjs"
  *     - "adoption"
  *
  *     operationId: create_profile
- *     x-eov-operation-handler: adoption/router
+ *     x-eov-operation-handler: adoptionProfile/router
  *
  *     requestBody:
  *       description: objeto contendo dados do perfil
@@ -39,7 +39,7 @@ import { getNextMatches, saveProfile, updateProfile } from "./service.mjs"
  *     - "adoption"
  *
  *     operationId: update_profile
- *     x-eov-operation-handler: adoption/router
+ *     x-eov-operation-handler: adoptionProfile/router
  *
  *     requestBody:
  *       description: objeto contendo dados do perfil
@@ -94,7 +94,7 @@ export async function update_profile(req, res, next){
  *     - "adoption"
  *
  *     operationId: find_next_match
- *     x-eov-operation-handler: adoption/router
+ *     x-eov-operation-handler: adoptionProfile/router
  *
  *     parameters:
  *       - $ref: '#/components/parameters/MatchLimit'

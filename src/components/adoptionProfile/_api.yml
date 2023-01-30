@@ -25,6 +25,27 @@ components:
         newPetOwner:
           type: boolean
           example: true
+    AdoptionRequest:
+      type: object
+      required:
+        - title
+        - description
+        - petId
+      properties:
+        title:
+          type: string
+          minLength: 10
+          maxLength: 40
+          example: Quero adotar seu gatinho
+        description:
+          type: string
+          minLength: 30
+          maxLength: 400
+          example: O seu gatinho é muito fofinho e bonitinho e eu quero que ele seja meu pra sempre 
+        petId:
+          type: integer
+          minimum: 1
+          default: 1
 
   parameters:
     MatchLimit:
