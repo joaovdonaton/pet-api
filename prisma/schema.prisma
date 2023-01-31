@@ -33,7 +33,7 @@ model Pet {
   nickname    String
   age         Int
   description String
-  owner       User              @relation(fields: [ownerId], references: [id])
+  owner       User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId     Int
   createdAt   DateTime          @default(now())
   type        PetType           @relation(fields: [typeId], references: [name])
@@ -48,7 +48,7 @@ model PetType {
 
 model AdoptionProfile {
   id            Int     @id @default(autoincrement())
-  user          User    @relation(fields: [userId], references: [id])
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        Int     @unique
   cep           String
   preferedTypes Json?
@@ -64,11 +64,11 @@ model AdoptionProfile {
 
 model AdoptionRequest {
   id         Int     @id @default(autoincrement())
-  sender     User    @relation("sender", fields: [senderId], references: [id])
+  sender     User    @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
   senderId   Int
-  receiver   User    @relation("receiver", fields: [receiverId], references: [id])
+  receiver   User    @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId Int
-  pet        Pet     @relation(fields: [petId], references: [id])
+  pet        Pet     @relation(fields: [petId], references: [id], onDelete: Cascade)
   petId      Int
   title      String
   message    String

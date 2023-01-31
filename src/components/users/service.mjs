@@ -1,6 +1,6 @@
 import {loadByCredentials, loadById, LoadByIdWithPetData, loadByUsername, removeUserByUsername, save, update} from './repository.mjs';
 import {createToken} from "../../security/jwt.mjs";
-import { badRequest } from '../../security/errors.mjs';
+import { badRequest, notFound } from '../../security/errors.mjs';
 
 export async function saveUser(user){
     const exists = await loadByUsername(user.username);
@@ -36,5 +36,6 @@ export async function authenticateUser(user){
 }
 
 export async function deleteUserByUsername(username){
+    if(!(await findUserByUsername(username))) throw notFound(`User [${username}] does not exist`)
     return await removeUserByUsername(username)
 }

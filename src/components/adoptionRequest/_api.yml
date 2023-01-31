@@ -41,6 +41,7 @@ components:
         status:
           type: string
           description: status novo (consultar StatusEnum)
+          enum: ['accepted', 'rejected', 'pending']
           default: accepted
     RequestType:
       type: string
