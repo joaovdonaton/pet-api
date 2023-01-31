@@ -35,7 +35,7 @@ import { getPets, savePet } from "./service.mjs"
  *        - JWT: ['USER']
  *   get:
  *     summary: returns a list of pets available for adoption
- *     description: return a paginated and ordered list of pets
+ *     description: return a paginated and ordered list of pets. Sorting by distance requires user to be authenticated and have an adoption profile
  *     
  *     tags:
  *       - "pets"
@@ -54,6 +54,10 @@ import { getPets, savePet } from "./service.mjs"
  *          description: pets returned successfully
  *       '404':
  *          description: no results
+ *     
+ *     security:
+ *       - {}
+ *       - JWT: ['USER']
  */
 export async function create_pet(req, res, _){
     const currentAuth = req.user

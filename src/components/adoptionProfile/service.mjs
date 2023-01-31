@@ -3,10 +3,10 @@ import { getCEPData, getGeoDistance, getLongLat } from "../../util/util.mjs";
 import { findProfilesByParams, update } from "../adoptionProfile/repository.mjs";
 import { findProfileByUserId, save } from "./repository.mjs";
 import {findUserById} from '../users/service.mjs'
-import { getAllPetsInArea } from "../pets/service.mjs";
+import { getAllPetsInArea, getAllPetsOrderByDistance } from "../pets/service.mjs";
 
 // adds state, city, district and coordinates to profile with CEP data.
-async function completeLocationData(profile){
+export async function completeLocationData(profile){
     const cep = profile.cep
 
     const cepData = await getCEPData(cep)
@@ -57,31 +57,7 @@ export async function getNextMatches(userId, limit){
     até que a lista seja preenchida
     */
 
-
-    let pets = []
-    const searchOrder = ['district', 'city', 'state']
-
-    // encontrar pets próximos
-    for(let i = 0; i < searchOrder.length; i++){
-        const petsInSameArea = await getAllPetsInArea(searchOrder[i], profile[searchOrder[i]], {district: profile.district, city: profile.city, state:profile.state})
-        //console.log(`getting all pets in the same ${searchOrder[i]}: ${profile[searchOrder[i]]}`)
-        //console.log('Results:')
-        //console.log(petsInSameArea)
-
-        for(let pet of petsInSameArea){
-            if(!profile.viewed.includes(pet.id) && pet.ownerId !== profile.userId){
-                const distance = parseInt((await (getGeoDistance(pet.latitude, pet.longitude, profile.latitude, profile.longitude))).s12)
-                pet.distance = distance 
-
-                if(pets.length < limit){
-                    pets.push(pet)
-                    profile.viewed.push(pet.id)
-                }
-                else break
-            }
-        }
-        if(pets.length === limit) break
-    }
+    let pets = await getAllPetsOrderByDistance(profile, limit)
 
     //atualizar pets já vistos pelo AdoptionProfile atual
     const u = await update(profile)
@@ -110,7 +86,7 @@ export async function getNextMatches(userId, limit){
 // details => {district, city, state} (required to avoid problems such as having a district with the same name in two different cities)
 export async function getProfilesByArea(area='global', areaName='', details={district:'', city:'', state:''}){
     if(!["district", "city", "state", "global"].includes(area)) throw new ServerError("Invalid Area", 500)
-    const params = {...details}
+    let params = {...details}
     if(area === 'global'){
         params = {}
     }

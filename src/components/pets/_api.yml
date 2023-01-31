@@ -16,6 +16,7 @@ components:
       enum: 
         - age
         - createdAt
+        - distance
     PetType:
       type: string
       enum:
