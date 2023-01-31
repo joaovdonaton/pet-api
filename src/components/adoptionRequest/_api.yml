@@ -42,3 +42,19 @@ components:
           type: string
           description: status novo (consultar StatusEnum)
           default: accepted
+    RequestType:
+      type: string
+      default: both
+      enum:
+        - incoming
+        - outgoing
+        - both
+
+  parameters:
+    RequestTypeParam:
+      name: requestType
+      description: type of request to return
+      in: query
+      required: true
+      schema:
+        $ref: '#/components/schemas/RequestType'

@@ -17,6 +17,19 @@ export async function formatUser(user){
     return {...user, password: undefined}
 }
 
+// params aqui seriam as relações que queremos buscar, por exemplo {incomingRequests: true, outgoingRequests: true} retornará o user com todos os AdoptionRequests dele
+// PROBLEMA: não tem como paginar relações do include (https://stackoverflow.com/questions/70957831/prisma-2-how-to-paginate-fields-of-a-findunique-query)
+export async function loadUserByIdWithParams(id, params){
+    return await prisma.user.findFirst({
+        where: {
+            id
+        },
+        include: {
+            ...params
+        }
+    })
+}
+
 export async function save(user){
     if(!user) return null;
 

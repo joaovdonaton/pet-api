@@ -58,7 +58,7 @@ components:
   parameters:
     LimitParam:
       name: limit
-      description: pet return limit per page
+      description: return limit per page
       in: query
       required: false
       schema:

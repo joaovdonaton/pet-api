@@ -1,6 +1,7 @@
 import { badRequest, forbidden, notFound } from "../../security/errors.mjs"
 import { findPetById } from "../pets/repository.mjs"
-import { findRequestById, findRequestsByReceiverId, save, update } from "./repository.mjs"
+import { loadUserByIdWithParams } from "../users/repository.mjs"
+import { findRequestById, findRequestsByReceiverId, save, update, findRequestsBySenderId, findRequestsBySenderIdOrReceiverId} from "./repository.mjs"
 
 export async function createRequest(data, currentAuth){
     const request = {...data}
@@ -17,9 +18,23 @@ export async function createRequest(data, currentAuth){
     return await save(request)
 }
 
-// retorna os adoption requests do usuário receiverId
-export async function getRequests(receiverId){
-    return await findRequestsByReceiverId(receiverId)
+export async function getRequests(currentAuth, limit, page, requestType){
+    const requests = []
+
+    if(requestType === 'incoming'){
+        const incoming = await findRequestsByReceiverId(currentAuth.id, limit, page)   
+        if(incoming) requests.push(...incoming)
+    }
+    if(requestType === 'outgoing'){
+        const outgoing = await findRequestsBySenderId(currentAuth.id, limit, page)
+        if(outgoing) requests.push(...outgoing)
+    }
+    if(requestType === 'both'){
+        const both = await findRequestsBySenderIdOrReceiverId(currentAuth.id, limit, page)
+        if(both) requests.push(...both)
+    }
+
+    return requests
 }
 
 export async function getRequestById(id){

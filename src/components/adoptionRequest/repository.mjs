@@ -1,36 +1,66 @@
-import {prisma} from '../../database/database.mjs'
+import { prisma } from "../../database/database.mjs";
 
-export async function save(request){
+export async function save(request) {
     return await prisma.adoptionRequest.create({
         data: {
-            ...request
-        }
-    })
+            ...request,
+        },
+    });
 }
 
-export async function findRequestsByReceiverId(receiverId){
+export async function findRequestsByReceiverId(receiverId, limit, page) {
     return await prisma.adoptionRequest.findMany({
-        where:{
-            receiverId
-        }
-    })
+        where: {
+            receiverId,
+        },
+        skip: page * limit,
+        take: limit,
+    });
 }
 
-export async function findRequestById(id){
+export async function findRequestsBySenderId(senderId, limit, page) {
+    return await prisma.adoptionRequest.findMany({
+        where: {
+            senderId,
+        },
+        skip: page * limit,
+        take: limit,
+    });
+}
+
+// encontra todos os requests em que o id é o sender ou o receiver
+export async function findRequestsBySenderIdOrReceiverId(id, limit, page) {
+    return await prisma.adoptionRequest.findMany({
+        where: {
+            OR: [
+                {
+                    receiverId: id,
+                },
+                { 
+                    senderId: id 
+                },
+            ],
+        },
+        skip: page*limit,
+        take: limit
+    });
+}
+
+export async function findRequestById(id) {
     return await prisma.adoptionRequest.findFirst({
-        where:{
-            id
-        }
-    })
+        where: {
+            id,
+        },
+    });
 }
 
-export async function update(request){
+export async function update(request) {
     return await prisma.adoptionRequest.update({
         data: {
-            ...request
+            ...request,
         },
         where: {
-            id: request.id
-        }
-    })
+            id: request.id,
+        },
+    });
 }

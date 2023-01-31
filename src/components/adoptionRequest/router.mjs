@@ -43,13 +43,18 @@ export async function send_adoption_request(req, res, next){
  * @openapi
  * /adoption/adopt:
  *   get:
- *     summary: ver os pedidos de adoção do usuário atualmente autenticado
+ *     summary: ver os pedidos de adoção (enviados ou recebidos) do usuário atualmente autenticado
  *
  *     tags:
  *     - "adoption"
  *
  *     operationId: get_adoption_requests
  *     x-eov-operation-handler: adoptionRequest/router
+ * 
+ *     parameters:
+ *       - $ref: '#/components/parameters/RequestTypeParam'
+ *       - $ref: '#/components/parameters/LimitParam'
+ *       - $ref: '#/components/parameters/PageParam'
  *
  *     responses:
  *       '200':
@@ -60,9 +65,9 @@ export async function send_adoption_request(req, res, next){
  */
 export async function get_adoption_requests(req, res, next){
     const currentAuth = req.user
-    
-    let requests = await getRequests(currentAuth.id)
-    if(!requests) requests = {}
+
+    let requests = await getRequests(currentAuth, req.query.limit, req.query.page, req.query.requestType)
+    if(!requests) requests = []
 
     return res.status(200).json(requests)
 }
