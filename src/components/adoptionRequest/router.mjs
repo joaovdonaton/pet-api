@@ -25,6 +25,8 @@ import { createRequest, getRequests, updateRequest } from "./service.mjs"
  *         description: request enviado com sucesso!
  *       '404':
  *         description: pet não existe
+ *       '400':
+ *         description: request invalido
  * 
  *     security:
  *       - JWT: ['USER']

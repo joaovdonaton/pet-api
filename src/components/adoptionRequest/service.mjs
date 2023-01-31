@@ -12,6 +12,8 @@ export async function createRequest(data, currentAuth){
 
     request.receiverId = pet.ownerId
 
+    if(request.receiverId === request.senderId) throw badRequest(`User id [${request.senderId}] cannot send an adoption request to himself`)
+
     return await save(request)
 }
 
