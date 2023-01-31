@@ -7,3 +7,11 @@ export async function save(request){
         }
     })
 }
+
+export async function findRequestsByReceiverId(receiverId){
+    return await prisma.adoptionRequest.findMany({
+        where:{
+            receiverId
+        }
+    })
+}

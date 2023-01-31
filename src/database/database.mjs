@@ -8,12 +8,12 @@ export const prisma = new PrismaClient();
 async function makeRole(name) {
     let exists = await prisma.role.findUnique({ where: { name } });
     if (exists) {
-        console.log(`role ${name} found`);
+        console.log(`[OK] role ${name} found`);
         return;
     }
 
     await prisma.role.create({ data: { name } });
-    console.log(`role ${name} created`);
+    console.log(`[!] role ${name} created`);
 }
 
 async function makeAdmin() {
@@ -34,7 +34,7 @@ async function makeAdmin() {
     });
 
     if (exists) {
-        console.log(`administrator found`);
+        console.log(`[OK] administrator found`);
         return;
     }
 
@@ -48,7 +48,7 @@ async function makeAdmin() {
             },
         },
     });
-    console.log(`Default administrator created`);
+    console.log(`[!] Default administrator created`);
 }
 
 async function makeUsers() {
@@ -85,13 +85,11 @@ async function makeUsers() {
                     roles: { connect: [{ name: "USER" }] },
                 },
             });
-            console.log(`Mock user ${usernames[i]} created`);
+            console.log(`[!] Mock user ${usernames[i]} created`);
         } catch (e) {
-            console.log(`Mock user "${usernames[i]}" already exists`);
+            console.log(`[OK] Mock user "${usernames[i]}" already exists`);
         }
     }
-
-    console.log("Mock users created");
 }
 
 async function makePets() {
@@ -124,7 +122,7 @@ async function makePets() {
                 name: names[i]
             }
         })) {
-            console.log(`Mock pet ${names[i]} already exists`)
+            console.log(`[OK] Mock pet ${names[i]} already exists`)
             continue
         }
 
@@ -138,29 +136,29 @@ async function makePets() {
                 ownerId: ownerIds[i],
             },
         });
-        console.log(`Mock pet ${names[i]} created`);
+        console.log(`[!] Mock pet ${names[i]} created`);
     }
 }
 
 async function makePetType(name) {
     let exists = await prisma.petType.findUnique({ where: { name } });
     if (exists) {
-        console.log(`Pet Type ${name} found`);
+        console.log(`[OK] Pet Type ${name} found`);
         return;
     }
 
     await prisma.petType.create({ data: { name } });
-    console.log(`Pet Type ${name} created`);
+    console.log(`[!] Pet Type ${name} created`);
 }
 
 async function makeAdoptionProfile(username, data){
     const u = await prisma.user.findFirst({where: {username}, include: {profile: true}})
     if(!u) {
-        console.log(`Could not create adoption profile for ${username}, user does not exist`)
+        console.log(`[ERROR] Could not create adoption profile for ${username}, user does not exist`)
         return
     }
     else if(u.profile){
-        console.log(`Adoption profile for ${username} already exists`)
+        console.log(`[OK] Adoption profile for ${username} already exists`)
         return
     }
 
@@ -188,7 +186,7 @@ async function makeAdoptionProfile(username, data){
         }
     })
 
-    console.log(`Mock adoption profile successfully created for ${username}`)
+    console.log(`[!] Mock adoption profile successfully created for ${username}`)
 }
 
 export async function bootstrapDb() {
