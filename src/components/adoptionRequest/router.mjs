@@ -1,4 +1,4 @@
-import { createRequest, getRequests } from "./service.mjs"
+import { createRequest, getRequests, updateRequest } from "./service.mjs"
 
 /**
  * @openapi
@@ -13,7 +13,7 @@ import { createRequest, getRequests } from "./service.mjs"
  *     x-eov-operation-handler: adoptionRequest/router
  * 
  *     requestBody:
- *       description: objeto contendo dados do perfil
+ *       description: objeto com dados do adoption request
  *       required: true
  *       content:
  *         application/json:
@@ -63,4 +63,43 @@ export async function get_adoption_requests(req, res, next){
     if(!requests) requests = {}
 
     return res.status(200).json(requests)
+}
+
+/**
+ * @openapi
+ * /adoption/adopt:
+ *   put:
+ *     summary: atualizar status do adoption request
+ *
+ *     tags:
+ *     - "adoption"
+ *
+ *     operationId: update_request
+ *     x-eov-operation-handler: adoptionRequest/router
+ * 
+ *     requestBody:
+ *       description: objeto com id do adoptionrequest para atualizar, e o status novo (Consulte StatusEnum)
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/AdoptionRequestUpdate"
+ *
+ *     responses:
+ *       '204':
+ *         description: atualizado com sucesso
+ *       '403':
+ *         description: usuário autenticado não é o receptor do request
+ *       '400':
+ *         description: status inválido
+ * 
+ *     security:
+ *       - JWT: ['USER']
+ */
+export async function update_request(req, res, next){
+    const currentAuth = req.user
+    
+    const updated = await updateRequest(req.body, currentAuth)
+    
+    return res.status(204).json(updated)
 }

@@ -72,5 +72,5 @@ model AdoptionRequest {
   petId      Int
   title      String
   message    String
-  accepted   Boolean @default(false)
+  status   String @default("pending")
 }

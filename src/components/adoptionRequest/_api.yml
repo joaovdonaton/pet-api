@@ -1,5 +1,11 @@
 components:
   schemas:
+    StatusEnum:
+      type: string
+      enum:
+        - pending
+        - accepted
+        - rejected
     AdoptionRequest:
       type: object
       required:
@@ -21,3 +27,18 @@ components:
           type: integer
           minimum: 1
           default: 1
+    AdoptionRequestUpdate:
+      type: object
+      required: 
+        - id
+        - status
+      properties:
+        id:
+          type: integer
+          description: Adoption request id
+          minimum: 1
+          default: 1
+        status:
+          type: string
+          description: status novo (consultar StatusEnum)
+          default: accepted

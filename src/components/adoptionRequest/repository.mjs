@@ -15,3 +15,22 @@ export async function findRequestsByReceiverId(receiverId){
         }
     })
 }
+
+export async function findRequestById(id){
+    return await prisma.adoptionRequest.findFirst({
+        where:{
+            id
+        }
+    })
+}
+
+export async function update(request){
+    return await prisma.adoptionRequest.update({
+        data: {
+            ...request
+        },
+        where: {
+            id: request.id
+        }
+    })
+}

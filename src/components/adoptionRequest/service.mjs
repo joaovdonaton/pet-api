@@ -1,6 +1,6 @@
-import { badRequest, notFound } from "../../security/errors.mjs"
+import { badRequest, forbidden, notFound } from "../../security/errors.mjs"
 import { findPetById } from "../pets/repository.mjs"
-import { findRequestsByReceiverId, save } from "./repository.mjs"
+import { findRequestById, findRequestsByReceiverId, save, update } from "./repository.mjs"
 
 export async function createRequest(data, currentAuth){
     const request = {...data}
@@ -18,4 +18,20 @@ export async function createRequest(data, currentAuth){
 // retorna os adoption requests do usuário receiverId
 export async function getRequests(receiverId){
     return await findRequestsByReceiverId(receiverId)
+}
+
+export async function getRequestById(id){
+    return await findRequestById(id)
+}
+
+export async function updateRequest(data, currentAuth){
+    const request = await getRequestById(data.id)
+
+    if(request.receiverId !== currentAuth.id) throw forbidden(`User id [${currentAuth.id}] is not the receiver of adoption request id [${data.id}]`)
+
+    if(!['accepted', 'pending', 'rejected'].includes(data.status)) throw badRequest(`Invalid status: [${data.status}]`)
+
+    request.status = data.status
+
+    return await update(request)
 }
