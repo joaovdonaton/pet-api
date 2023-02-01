@@ -53,10 +53,11 @@ export async function getNextMatches(userId, limit){
     - Ordenar por distância, aplicar ordenação por filtros e filtros normais (preferencia por tipo de animal, se está no viewed e outros...)
     - Ver se a lista de pets que sobra é o suficiente para retornar a quantidade requisitada no limit.
     - Caso seja. Retorne os pets.
-    - Caso NÃO seja. Adicione os que der na lista de pets para retornar. Expendir a busca para City (depois State, depois Global), e repetir os mesmos passos acima,
-    até que a lista seja preenchida
+    - Caso NÃO seja. Adicione os que der na lista de pets para retornar. Expandir a busca para City (depois State, depois Global), e repetir os mesmos passos acima,
+    até que a lista seja preenchida (ou até que acabe as áreas de busca)
     */
 
+    // algoritmo de busca por proximidade
     let pets = await getAllPetsOrderByDistance(profile, limit)
 
     //atualizar pets já vistos pelo AdoptionProfile atual

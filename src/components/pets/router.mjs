@@ -1,6 +1,6 @@
 import { NotFound } from "express-openapi-validator/dist/framework/types.js"
-import { BadRequest } from "express-openapi-validator/dist/openapi.validator.js"
 import { getPets, savePet } from "./service.mjs"
+import { notFound } from "../../security/errors.mjs"
 
 /**
  * @openapi
@@ -70,9 +70,9 @@ export async function create_pet(req, res, _){
     return res.status(201).json(savedPet)
 }
 export async function list_available_pets(req, res, _){
-    const pets = await getPets(req.query.limit, req.query.page, req.query.sortBy, req.query.ascDesc)
+    let pets = await getPets(req.query.limit, req.query.page, req.query.sortBy, req.query.ascDesc, req.user)
     
-    if(pets.length === 0) throw NotFound("No results")
+    if(pets.length === 0) pets = []
 
     return res.json(pets)
 }
