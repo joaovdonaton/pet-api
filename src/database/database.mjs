@@ -189,6 +189,27 @@ async function makeAdoptionProfile(username, data){
     console.log(`[!] Mock adoption profile successfully created for ${username}`)
 }
 
+async function makeOrganizationType(name){
+    const exists = await prisma.organizationType.findFirst({
+        where: {
+            name
+        }
+    })
+
+    if(exists){
+        console.log(`[OK] OrganizationType ${name} already exists`)
+        return
+    }
+
+    await prisma.organizationType.create({
+        data:{
+            name
+        }
+    })
+
+    console.log(`[!] Organization Type ${name} created successfully`)
+}
+
 export async function bootstrapDb() {
     console.log("Checking initial data...");
     await makeRole("ADMIN");
@@ -205,6 +226,10 @@ export async function bootstrapDb() {
 
     await makeAdoptionProfile("joseph400", {cep: '80250-220', newPetOwner: true, preferedTypes: ['cat']})
     await makeAdoptionProfile("iamarnold", {cep: '66075-110', newPetOwner: true, preferedTypes: ['cat', 'dog']})
+
+    await makeOrganizationType("user")
+    await makeOrganizationType("government")
+    await makeOrganizationType("non-government")
 
     console.log("Done!");
 }

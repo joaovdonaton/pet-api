@@ -20,6 +20,7 @@ model User {
   profile          AdoptionProfile?
   incomingRequests AdoptionRequest[] @relation("receiver")
   outgoingRequests AdoptionRequest[] @relation("sender")
+  organizations Organization[]
 }
 
 model Role {
@@ -39,6 +40,7 @@ model Pet {
   type        PetType           @relation(fields: [typeId], references: [name])
   typeId      String            @default("dog")
   requests    AdoptionRequest[]
+  camapigns Campaign[]
 }
 
 model PetType {
@@ -73,4 +75,32 @@ model AdoptionRequest {
   title      String
   message    String
   status   String @default("pending")
+}
+
+model OrganizationType{
+  name String @id
+  organizations Organization[]
+}
+
+model Campaign {
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  moneyTarget Decimal?
+  money Decimal?
+  resourcesTarget Json?
+  resources Json?
+  pets Pet[]
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId Int
+}
+
+model Organization{
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  organizers User[]
+  campaigns Campaign[]
+  type OrganizationType @relation(fields: [typeId], references: [name])
+  typeId String
 }
