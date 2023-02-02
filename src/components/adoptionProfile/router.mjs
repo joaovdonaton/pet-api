@@ -1,4 +1,4 @@
-import { getNextMatches, saveProfile, updateProfile } from "./service.mjs"
+import { getNextMatches, resetViewed, saveProfile, updateProfile } from "./service.mjs"
 
 /**
  * @openapi
@@ -107,6 +107,24 @@ export async function update_profile(req, res, next){
  * 
  *     security:
  *       - JWT: ['USER']
+ *   delete:
+ *     summary: apagar o histórico de pets já vistos no matcher pelo usuário authenticado
+ *
+ *     tags:
+ *     - "adoption"
+ *
+ *     operationId: delete_history
+ *     x-eov-operation-handler: adoptionProfile/router
+ *
+ *     responses:
+ *       '204':
+ *         description: sucesso
+ *       '401':
+ *         description: autenticação inválida
+ * 
+ *     security:
+ *       - JWT: ['USER']
+ * 
  */
 export async function find_next_match(req, res, next){
     const currentAuth = req.user
@@ -114,4 +132,11 @@ export async function find_next_match(req, res, next){
     const matches = await getNextMatches(currentAuth.id, req.query.limit);
 
     res.status(200).json(matches)
+}
+export async function delete_history(req, res, next){
+    const currentAuth = req.user
+
+    await resetViewed(currentAuth.id)
+
+    res.sendStatus(204)
 }

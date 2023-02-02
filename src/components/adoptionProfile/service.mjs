@@ -40,6 +40,14 @@ export async function updateProfile(profile){
     return await update(profile)
 }
 
+export async function resetViewed(id){
+    const profile = await findProfileByUserId(id)
+    if(!profile) throw unauthorized(`Invalid authentication for user id [${id}]`)
+
+    profile.viewed = []
+    return await update(profile)
+}
+
 export async function getNextMatches(userId, limit){
     const user = await findUserById(userId)
     if(!user) throw unauthorized("Invalid autentication for id " + userId )
@@ -58,7 +66,7 @@ export async function getNextMatches(userId, limit){
     */
 
     // algoritmo de busca por proximidade
-    let pets = await getAllPetsOrderByDistance(profile, limit)
+    let pets = await getAllPetsOrderByDistance(profile, limit, true)
 
     //atualizar pets já vistos pelo AdoptionProfile atual
     const u = await update(profile)

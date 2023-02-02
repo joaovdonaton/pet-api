@@ -34,10 +34,8 @@ export async function getPetById(id){
     return await findPetById(id)
 }
 
-// adiciona a propriedade distance (distancia do profile até o pet) aos pets retornados. 
-// page é opcional e será ignorado se for undefined
-//filterViewed exclui os pets já vistos no matching pelo perfil atual
-export async function getAllPetsOrderByDistance(profile, limit){
+// adiciona a propriedade distance (distancia em KM do profile até o pet) aos pets retornados. 
+export async function getAllPetsOrderByDistance(profile, limit, filterViewed=false){
     let pets = []
     const searchOrder = ['district', 'city', 'state', 'global']
 
@@ -46,9 +44,11 @@ export async function getAllPetsOrderByDistance(profile, limit){
         const petsInSameArea = await getAllPetsInArea(searchOrder[i], profile[searchOrder[i]], {district: profile.district, city: profile.city, state:profile.state})
         
         for(let pet of petsInSameArea){
-            if(!profile.viewed.includes(pet.id) && pet.ownerId !== profile.userId){
+            if(!pets.some((p) => p.id === pet.id) && pet.ownerId !== profile.userId){
+                if(filterViewed && profile.viewed.includes(pet.id)) continue
+
                 const distance = parseInt((await (getGeoDistance(pet.latitude, pet.longitude, profile.latitude, profile.longitude))).s12)
-                pet.distance = distance
+                pet.distance = Math.floor(distance / 1000) // distancia é convertida pra KM, a api não precisa dar tanta precisão quanto a distância
                 
                 if(pets.length < limit){
                     pets.push(pet)
