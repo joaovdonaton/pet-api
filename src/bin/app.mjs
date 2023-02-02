@@ -12,7 +12,7 @@ import resolver from './esmresolver.mjs';
 import {JWT_SECURITY} from "../security/jwt.mjs";
 import { bootstrapDb } from '../database/database.mjs';
 import { errorHandler } from '../security/errors.mjs';
-import { logHandler } from '../security/logging.mjs';
+import { logHandler, runAndLog } from '../security/logging.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -67,6 +67,6 @@ app.use(errorHandler)
 
 app.use(express.static(`${__dirname}/public`));
 
-bootstrapDb().catch(console.error)
+runAndLog(bootstrapDb())
 
 export default app;

@@ -1,7 +1,7 @@
-import axios from "axios"
 import { ServerError } from '../security/errors.mjs'
 import NodeGeocoder from 'node-geocoder'
 import geodesic from "geographiclib-geodesic"
+import { newAxios } from "./network.mjs"
 
 export const geocoder = NodeGeocoder({
     provider: 'google',
@@ -13,6 +13,8 @@ export const geod = geodesic.Geodesic.WGS84
 export async function getCEPData(cep){
     if(!validateCEP(cep)) return null
     const url = process.env.CEP_INFO_URL.replace('<CEP>', cep)
+    
+    const axios = newAxios()
 
     const res = await axios.get(url)
 

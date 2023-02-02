@@ -57,3 +57,11 @@ export async function logHandler(err, req, res, next){
 
     if (next) next(err);
 }
+
+export function runAndLog(promise, {origin='Async', onSuccess = info, onError = error} = {}) {
+    return promise.then(r => {
+            const log = {origin, description: 'Success'};
+            if (r) log.result = JSON.stringify(r);
+            onSuccess(log);
+        }).catch(err => onError({origin, description: 'Failure', err}))
+}
