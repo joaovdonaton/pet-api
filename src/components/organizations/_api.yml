@@ -1,0 +1,27 @@
+tags:
+  - name: organizations
+    description: organization management endpoints
+
+components:
+  schemas:
+    OrganizationRegister:
+      type: object
+      required: 
+        - name
+        - description
+        - typeId
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 30
+          example: 'Pet Lovers'
+        description:
+          type: string
+          minLength: 50
+          maxLength: 1000
+        typeId:
+          type: string
+          enum: [user, government, non-government]
+          example: user
+        

@@ -84,7 +84,7 @@ model OrganizationType{
 
 model Campaign {
   id Int @id @default(autoincrement())
-  title String
+  title String @unique
   description String
   moneyTarget Decimal?
   money Decimal?
@@ -97,7 +97,7 @@ model Campaign {
 
 model Organization{
   id Int @id @default(autoincrement())
-  name String
+  name String @unique
   description String
   organizers User[]
   campaigns Campaign[]
