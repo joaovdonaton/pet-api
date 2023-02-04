@@ -24,4 +24,13 @@ components:
           type: string
           enum: [user, government, non-government]
           example: user
-        
+  
+  parameters:
+    OrganizationName:
+      in: path
+      name: orgName
+      description: org
+      required: true
+      schema:
+        type: string
+      example: "Pet Lovers"
