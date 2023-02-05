@@ -86,12 +86,12 @@ model Campaign {
   id Int @id @default(autoincrement())
   title String @unique
   description String
-  moneyTarget Decimal?
-  money Decimal?
-  resourcesTarget Json?
-  resources Json?
+  moneyTarget Decimal? @default(0)
+  money Decimal? @default(0)
+  resourcesTarget Json? @default("[]")
+  resources Json? @default("[]")
   pets Pet[]
-  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId Int
 }
 

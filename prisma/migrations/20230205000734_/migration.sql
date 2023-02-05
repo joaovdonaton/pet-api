@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `campaign` MODIFY `moneyTarget` DECIMAL(65, 30) NULL DEFAULT 0,
+    MODIFY `money` DECIMAL(65, 30) NULL DEFAULT 0;

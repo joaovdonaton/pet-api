@@ -92,6 +92,8 @@ export async function get_organization(req, res, next){
  *         description: membro adicionado com sucesso
  *       '404':
  *         description: organização não existe
+ *       '403':
+ *         description: usuario autenticado deve ser o dono da organização
  * 
  *     security:
  *       - JWT: ['USER']

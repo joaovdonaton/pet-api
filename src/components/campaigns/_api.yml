@@ -1,0 +1,41 @@
+tags:
+  - name: campaigns
+    description: campaign management endpoints
+
+components:
+  schemas:
+    CampaignRegister:
+      type: object
+      required: 
+        - title
+        - description
+        - organizationId
+      properties:
+        title:
+          type: string
+          maxLength: 45
+          minLength: 10
+          example: "Ajude o Nosso Gatinho"
+        description:
+          type: string
+          maxLength: 1000
+          minLength: 50
+        organizationId:
+          type: integer
+          example: 4
+        moneyTarget:
+          type: number
+          format: float
+          minimum: 0
+          example: 0.0
+          default: 0
+        resourcesTarget:
+          type: array
+          description: lista de objetos com campos name e description para descrever os recursos que precisam ser arrecadados
+          example: [{name: 'gaiola', description: 'precisamos de uma gaiola para aprisionar os nossos gatinhos...'}, {name: '1kg ração de gato', description: 'comida'}]
+          default: []
+        pets: 
+          type: array
+          description: lista de ids dos pets que fazem parte dessa campanha
+          example: [4, 1]
+          default: []

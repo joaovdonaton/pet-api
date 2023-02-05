@@ -1,5 +1,5 @@
 import { badRequest, forbidden, notFound } from "../../security/errors.mjs";
-import { loadOrganizationByName, save, updateMembers } from "./repository.mjs";
+import { loadOrganizationById, loadOrganizationByName, save, updateMembers } from "./repository.mjs";
 
 export async function saveOrganization(currentAuth, organization){
     if(await loadOrganizationByName(organization.name)) throw badRequest(`An organization named [${organization.name}] already exists`)
@@ -25,4 +25,10 @@ export async function addMember(currentAuth, memberId, orgName){
     if(org.organizers.some(o => o.id === memberId)) throw badRequest(`User id [${memberId}] is already in the organization`)
 
     return await updateMembers(org, memberId)
+}
+
+export async function getOrganizationById(id){
+    const org = await loadOrganizationById(id);
+    if(!org) throw notFound(`Organization id [${id}] was not found`)
+    return org
 }

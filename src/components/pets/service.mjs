@@ -1,6 +1,6 @@
 import { getProfilesByArea } from "../adoptionProfile/service.mjs";
 import { findUserById, findUserByIdWithPetData } from "../users/service.mjs";
-import {findAllPets, save} from "./repository.mjs";
+import {findAllPets, save, findPetById} from "./repository.mjs";
 import { getGeoDistance } from "../../util/util.mjs";
 import { unauthorized, badRequest } from "../../security/errors.mjs";
 
