@@ -20,7 +20,7 @@ model User {
   profile          AdoptionProfile?
   incomingRequests AdoptionRequest[] @relation("receiver")
   outgoingRequests AdoptionRequest[] @relation("sender")
-  organizations Organization[]
+  organizations Organization[] @relation("member")
 }
 
 model Role {
@@ -99,7 +99,8 @@ model Organization{
   id Int @id @default(autoincrement())
   name String @unique
   description String
-  organizers User[]
+  organizers User[] @relation("member")
+  ownerId Int @default(1)
   campaigns Campaign[]
   type OrganizationType @relation(fields: [typeId], references: [name])
   typeId String

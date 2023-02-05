@@ -1,4 +1,4 @@
-import { getOrganizationByName, saveOrganization } from "./service.mjs"
+import { addMember, getOrganizationByName, saveOrganization } from "./service.mjs"
 
 /**
  * @openapi
@@ -61,4 +61,45 @@ export async function create_organization(req, res, next){
  */
 export async function get_organization(req, res, next){
     res.status(200).json(await getOrganizationByName(req.params.orgName))
+}
+
+/**
+ * @openapi
+ * /organizations/{orgName}/members:
+ *   post:
+ *     summary: adicionar um membro à organization 
+ *     description: para adicionar um membro à organization é necessário que o usuário autenticado seja o owner.
+ *
+ *     tags:
+ *     - "organizations"
+ *
+ *     operationId: add_member
+ *     x-eov-operation-handler: organizations/router
+ * 
+ *     parameters: 
+ *       - $ref: '#/components/parameters/OrganizationName'
+ * 
+ *     requestBody:
+ *       description: objeto com dados do novo membro
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/MemberInfo"
+ *        
+ *     responses:
+ *       '204':
+ *         description: membro adicionado com sucesso
+ *       '404':
+ *         description: organização não existe
+ * 
+ *     security:
+ *       - JWT: ['USER']
+ */
+export async function add_member(req, res, next){
+    const currentAuth = req.user
+    
+    const org = await addMember(currentAuth, req.body.id, req.params.orgName)
+    
+    res.status(204).json(org)
 }

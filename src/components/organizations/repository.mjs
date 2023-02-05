@@ -17,6 +17,29 @@ export async function loadOrganizationByName(name){
     return await prisma.organization.findFirst({
         where:{
             name
+        },
+        include: {
+            organizers: {
+                select: {
+                    id: true,
+                    name: true,
+                    password: false,
+                    username: true
+                }
+            }
+        }
+    })
+}
+
+export async function updateMembers(organization, newMemberId){
+    return await prisma.organization.update({
+        where: {
+            id: organization.id
+        },
+        data: {
+            organizers : {
+                connect: {id: newMemberId}
+            }
         }
     })
 }

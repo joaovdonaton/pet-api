@@ -24,6 +24,14 @@ components:
           type: string
           enum: [user, government, non-government]
           example: user
+    MemberInfo:
+      type: object
+      required: 
+        - id
+      properties:
+        id:
+          type: integer
+          example: 5
   
   parameters:
     OrganizationName:
