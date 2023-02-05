@@ -1,4 +1,4 @@
-import { badRequest, forbidden } from "../../security/errors.mjs";
+import { badRequest, forbidden, notFound } from "../../security/errors.mjs";
 import { getOrganizationById } from "../organizations/service.mjs";
 import { loadCampaignByTitle, save } from "./repository.mjs";
 import {getPetById } from '../pets/service.mjs'
@@ -20,4 +20,12 @@ export async function saveCampaign(currentAuth, campaign){
     }
 
     return await save(campaign)
+}
+
+export async function getCampaignByTitle(title){
+    const campaign = await loadCampaignByTitle(title);
+
+    if(!campaign) throw notFound(`Campaign titled [${title}] does not exist.`)
+
+    return campaign
 }

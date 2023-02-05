@@ -39,3 +39,12 @@ components:
           description: lista de ids dos pets que fazem parte dessa campanha
           example: [4, 1]
           default: []
+
+  parameters:
+    CampaignTitle:
+      in: path
+      name: campaignTitle
+      required: true
+      schema:
+        type: string
+        example: ajude o nosso gatinho

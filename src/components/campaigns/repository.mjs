@@ -17,6 +17,9 @@ export async function loadCampaignByTitle(title){
     return await prisma.campaign.findFirst({
         where:{
             title
+        },
+        include: {
+            pets: true
         }
     })
 }
