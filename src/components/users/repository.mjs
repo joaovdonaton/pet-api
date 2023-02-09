@@ -9,7 +9,7 @@ const USER_FIELDS = {
     id: true,
     pets: false, 
     password: false,
-    profile: true
+    profile: true,
 }
 
 export async function formatUser(user){

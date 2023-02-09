@@ -94,6 +94,7 @@ model Campaign {
   organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId  Int
   createdAt       DateTime     @default(now())
+  blogposts Blogpost[]
 }
 
 model Organization {
@@ -105,4 +106,13 @@ model Organization {
   campaigns   Campaign[]
   type        OrganizationType @relation(fields: [typeId], references: [name])
   typeId      String
+}
+
+model Blogpost{
+  id Int @id @default(autoincrement())
+  title String 
+  content String
+  authorId Int
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+  campaignId Int
 }

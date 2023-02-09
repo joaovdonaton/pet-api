@@ -39,6 +39,22 @@ components:
           description: lista de ids dos pets que fazem parte dessa campanha
           example: [4, 1]
           default: []
+    BlogpostRegister:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+          example: Mais um dia ajudando os gatinhos
+          minLength: 15
+          maxLength: 75
+        content:
+          type: string
+          example: Hoje ajudamos os gatinhos a serem felizes. Alimentamos os gatinhos com arroz e feijão, e brincamos muito com eles.
+          minLength: 50
+          maxLength: 4000
 
   parameters:
     CampaignTitle:
