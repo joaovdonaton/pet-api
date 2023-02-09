@@ -1,4 +1,4 @@
-import { getCampaignByTitle, saveCampaign } from "./service.mjs"
+import { getCampaignByTitle, listCampaigns, saveCampaign } from "./service.mjs"
 
 /**
  * @openapi
@@ -31,6 +31,28 @@ import { getCampaignByTitle, saveCampaign } from "./service.mjs"
  * 
  *     security:
  *       - JWT: ['USER']
+ * 
+ *   get:
+ *     summary: returns a list of campaigns based on search params
+ *     description: return a paginated and ordered list of campaigns. Sorting by distance requires user to be authenticated and have an adoption profile
+ *     
+ *     tags:
+ *       - "campaigns"
+ *     
+ *     operationId: list_campaigns
+ *     x-eov-operation-handler: campaigns/router
+ *     
+ *     parameters:
+ *       - $ref: "#/components/parameters/LimitParam"
+ *       - $ref: "#/components/parameters/PageParam"
+ *       - $ref: "#/components/parameters/CampaignSortByParam"
+ *       - $ref: "#/components/parameters/AscDescParam"
+ *       - $ref: "#/components/parameters/SearchDataParam"
+ *       - $ref: "#/components/parameters/SearchTypeParam"
+ * 
+ *     responses:
+ *       '200':
+ *          description: campaigns returned successfully
  */
 export async function create_campaign(req, res, next){
     const currentAuth = req.user
@@ -38,6 +60,11 @@ export async function create_campaign(req, res, next){
     const campaign = await saveCampaign(currentAuth, req.body)
 
     res.status(200).json(campaign)
+}
+export async function list_campaigns(req, res, next){
+    const results = await listCampaigns(req.query.limit, req.query.page, req.query.sortBy, req.query.ascDesc, req.query.searchData, req.query.searchType)
+
+    res.json(results)
 }
 
 /**

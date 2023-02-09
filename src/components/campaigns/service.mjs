@@ -1,6 +1,6 @@
 import { badRequest, forbidden, notFound } from "../../security/errors.mjs";
 import { getOrganizationById } from "../organizations/service.mjs";
-import { loadCampaignByTitle, save } from "./repository.mjs";
+import { findAllCampaigns, loadCampaignByTitle, save } from "./repository.mjs";
 import {getPetById } from '../pets/service.mjs'
 
 export async function saveCampaign(currentAuth, campaign){
@@ -28,4 +28,38 @@ export async function getCampaignByTitle(title){
     if(!campaign) throw notFound(`Campaign titled [${title}] does not exist.`)
 
     return campaign
+}
+
+export async function listCampaigns(limit, page, sortBy, ascDesc, searchData, searchType){
+    let whereQuery = {}
+
+    if(searchType){
+        if(!searchData) throw badRequest(`searchData field must not be empty`)
+
+        if(searchType === 'title' || searchType === 'description') whereQuery[searchType] = {contains: searchData}
+        else {
+            // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-nested-array-value
+            // só funciona se o searchData for EXATAMENTE igual ao name OU description do resource.
+            whereQuery = {
+                OR: [
+                    {
+                        [searchType]: {
+                            path: '$[*].name',
+                            array_contains: searchData
+                        } 
+                    },
+                    {
+                        [searchType]: {
+                            path: '$[*].description',
+                            array_contains: searchData
+                        } 
+                    }
+                ]
+            }
+        }
+    }
+
+    console.log(JSON.stringify(whereQuery))
+
+    return await findAllCampaigns(limit, page, sortBy, ascDesc, whereQuery)
 }

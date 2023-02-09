@@ -48,3 +48,28 @@ components:
       schema:
         type: string
         example: ajude o nosso gatinho
+    CampaignSortByParam:
+      in: query
+      name: sortBy
+      description: field to sort by
+      required: false
+      schema:
+        type: string
+        enum: [createdAt]
+        default: createdAt
+    SearchDataParam:
+      in: query
+      name: searchData
+      required: false
+      description: texto que será aplicado na busca
+      schema:
+        type: string
+        example: 'ajude'
+    SearchTypeParam:
+      in: query
+      name: searchType
+      description: campo para buscar
+      required: false
+      schema:
+        type: string
+        enum: [title, description, resourcesTarget]

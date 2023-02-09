@@ -23,3 +23,17 @@ export async function loadCampaignByTitle(title){
         }
     })
 }
+
+export async function findAllCampaigns(limit, page, sortBy, ascDesc, whereQuery){
+    const orderByObj = {}
+    orderByObj[sortBy] = ascDesc
+
+    return await prisma.campaign.findMany({
+        where: whereQuery,
+        orderBy: [
+            orderByObj
+        ],
+        skip: limit*page,
+        take: limit
+    })
+}
