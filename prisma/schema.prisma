@@ -115,4 +115,5 @@ model Blogpost{
   authorId Int
   campaign Campaign @relation(fields: [campaignId], references: [id])
   campaignId Int
+  createdAt       DateTime     @default(now())
 }

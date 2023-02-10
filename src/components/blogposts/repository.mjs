@@ -7,3 +7,18 @@ export async function save(blogpost){
         }
     })
 }
+
+export async function findAllBlogpostsByCampaign(limit, page, ascDesc, campaignId){
+    return await prisma.blogpost.findMany({
+        where: {
+            campaignId
+        },
+        orderBy: [
+            {
+                createdAt: ascDesc
+            }
+        ],
+        skip: limit*page,
+        take: limit
+    })
+}

@@ -1,7 +1,7 @@
 import { loadUserByIdWithParams } from "../users/repository.mjs";
 import {getCampaignByTitle} from '../campaigns/service.mjs'
 import { forbidden } from "../../security/errors.mjs";
-import { save } from "./repository.mjs";
+import { findAllBlogpostsByCampaign, save } from "./repository.mjs";
 
 export async function saveBlogpost(blogpost, campaignTitle, currentAuth){
     const u = await loadUserByIdWithParams(currentAuth.id, {organizations: true})
@@ -16,4 +16,10 @@ export async function saveBlogpost(blogpost, campaignTitle, currentAuth){
     blogpost.campaignId = campaign.id
 
     return await save(blogpost)
+}
+
+export async function listBlogposts(limit, page, ascDesc, campaignTitle){
+    const campaignId = (await getCampaignByTitle(campaignTitle)).id
+
+    return await findAllBlogpostsByCampaign(limit, page, ascDesc, campaignId)
 }

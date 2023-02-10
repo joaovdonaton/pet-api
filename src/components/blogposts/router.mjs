@@ -1,4 +1,4 @@
-import { saveBlogpost } from "./service.mjs"
+import { saveBlogpost, listBlogposts } from "./service.mjs"
 
 /**
  * @openapi
@@ -30,6 +30,26 @@ import { saveBlogpost } from "./service.mjs"
  *     
  *     security:
  *       - JWT: ['USER']
+ *   get:
+ *     summary: listar blogposts
+ *     description: ordenação feita por data
+ * 
+ *     tags:
+ *     - "campaigns"
+ *
+ *     operationId: get_blogposts
+ *     x-eov-operation-handler: blogposts/router
+ *     
+ *     parameters:
+ *       - $ref: "#/components/parameters/LimitParam"
+ *       - $ref: "#/components/parameters/PageParam"
+ *       - $ref: "#/components/parameters/AscDescParam"
+ *       - $ref: '#/components/parameters/CampaignTitle'
+ *        
+ *     responses:
+ *       '200':
+ *         description: blogposts retornado com sucesso
+ *     
  */
 export async function create_blogpost(req, res, next){
     const currentAuth = req.user
@@ -37,4 +57,7 @@ export async function create_blogpost(req, res, next){
     const blogpost = await saveBlogpost(req.body, req.params.campaignTitle, currentAuth)
 
     res.json(blogpost)
+}
+export async function get_blogposts(req, res, next){
+    res.json(await listBlogposts(req.query.limit, req.query.page, req.query.ascDesc, req.params.campaignTitle))
 }
