@@ -52,3 +52,24 @@ export async function getLongLat({city='', state='', district='', street=''}){
 export async function getGeoDistance(lat1, long1, lat2, long2){
     return geod.Inverse(lat1,long1,lat2,long2)
 }
+
+/**
+ * adiciona dados de localização (state, district, city, latitutde, longitude) a um objeto profile que tem o cep 
+ * @param {object} profile 
+ * @returns {object} profile com dados adicionais
+ */
+export async function completeLocationData(profile){
+    const cep = profile.cep
+
+    const cepData = await getCEPData(cep)
+    const {latitude, longitude} = await getLongLat({city: cepData.city, state: cepData.state, district: cepData.district, street: cepData.street})
+
+    profile.latitude = latitude
+    profile.longitude = longitude
+
+    profile.state = cepData.state
+    profile.city = cepData.city
+    profile.district = cepData.district
+
+    return profile
+}

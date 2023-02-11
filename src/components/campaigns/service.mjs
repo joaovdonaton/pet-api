@@ -39,7 +39,8 @@ export async function listCampaigns(limit, page, sortBy, ascDesc, searchData, se
         if(searchType === 'title' || searchType === 'description') whereQuery[searchType] = {contains: searchData}
         else {
             // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-nested-array-value
-            // só funciona se o searchData for EXATAMENTE igual ao name OU description do resource.
+            // query em coluna JSON 
+            // só consegui fazer funcionar se o searchData for EXATAMENTE igual ao name OU description do resource.
             whereQuery = {
                 OR: [
                     {

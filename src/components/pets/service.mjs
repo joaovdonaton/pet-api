@@ -1,7 +1,7 @@
 import { getProfilesByArea } from "../adoptionProfile/service.mjs";
 import { findUserById, findUserByIdWithPetData } from "../users/service.mjs";
 import {findAllPets, save, findPetById} from "./repository.mjs";
-import { getGeoDistance } from "../../util/util.mjs";
+import { getGeoDistance } from "../../util/location.mjs";
 import { unauthorized, badRequest } from "../../security/errors.mjs";
 
 export async function savePet(pet){
@@ -34,14 +34,29 @@ export async function getPetById(id){
     return await findPetById(id)
 }
 
-// adiciona a propriedade distance (distancia em KM do profile até o pet) aos pets retornados. 
+/**
+ * Os pets retornados recebem a propriedade adicional "distance" (distancia em km do usuario autenticado até o pet)
+ * 
+ * Como funciona o algoritmo: 
+ * - Primeiro pegar todos os pets que se encontram no mesmo District que está no AdoptionProfile atual
+ * - Ver se o pet está no viewed caso filterViewed sejá true
+ * - Ver se a lista de pets que sobra é o suficiente para retornar a quantidade requisitada no limit.
+ * - Caso seja. Retorne os pets.
+ * - Caso NÃO seja. Adicione os que der na lista de pets para retornar. Expandir a busca para City (depois State, depois Global), e repetir os mesmos passos acima,
+ * até que a lista seja preenchida (ou até que acabe as áreas de busca)
+ * 
+ * @param {object} profile adoptionprofile do usuario autenticado
+ * @param {number} limit quantidade de pets para buscar
+ * @param {boolean} filterViewed pular os pets já vistos pelo usuario atenticado
+ * @returns lista de pets
+ */
 export async function getAllPetsOrderByDistance(profile, limit, filterViewed=false){
     let pets = []
     const searchOrder = ['district', 'city', 'state', 'global']
 
     // encontrar pets próximos
     for(let i = 0; i < searchOrder.length; i++){
-        const petsInSameArea = await getAllPetsInArea(searchOrder[i], profile[searchOrder[i]], {district: profile.district, city: profile.city, state:profile.state})
+        const petsInSameArea = await getAllPetsInArea(searchOrder[i], {district: profile.district, city: profile.city, state:profile.state})
         
         for(let pet of petsInSameArea){
             if(!pets.some((p) => p.id === pet.id) && pet.ownerId !== profile.userId){
@@ -63,11 +78,13 @@ export async function getAllPetsOrderByDistance(profile, limit, filterViewed=fal
     return pets
 }
 
-// area => district, city, state or global
-// details => {district, city, state} (required to avoid problems such as having a district with the same name in two different cities)
-// returns an array of pets. Each pet object has two additional properties (latitude and longitude)
-export async function getAllPetsInArea(area='global', areaName, details={district:'', city:'', state:''}){
-    const profiles = await getProfilesByArea(area, areaName, details)
+/**
+ * @param {string} area district, city, state ou global
+ * @param {object} details objeto com dados adicionais sobre localização, para evitar problemas como dois distritos com o mesmo nome em cidades diferentes
+ * @returns array de pets, cada pet recebe as propriedades latitude e longitude
+ */
+export async function getAllPetsInArea(area='global', details={district:'', city:'', state:''}){
+    const profiles = await getProfilesByArea(area, details)
 
     const allPets = []
     for(let profile of profiles){

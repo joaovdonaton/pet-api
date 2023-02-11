@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import axios from "axios";
 import bcrypt from "bcrypt";
-import { getCEPData, getLongLat } from "../util/util.mjs";
+import { getCEPData, getLongLat } from "../util/location.mjs";
 
 export const prisma = new PrismaClient();
 
