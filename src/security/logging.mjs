@@ -54,7 +54,7 @@ export async function logHandler(err, req, res, next){
         user: req.user
     }
     errorObj.statusCode === 500 ? error(log) : info(log);
-
+    
     if (next) next(err);
 }
 

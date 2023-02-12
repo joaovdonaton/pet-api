@@ -3,7 +3,8 @@
 ## <b>Alunos:</b> João Vitor Donaton <br>
 ## <b>Professor:</b> Vinicius Godoy <br>
 <br>
-O programa depende de um arquivo .env que deve ter as seguintes variáveis:
+
+**O programa depende de um arquivo .env que deve ter as seguintes variáveis:**
 
 - <i>ISSUER</i> (para os tokens JWT)
 - <i>NODE_ENV</i> (prod ou dev)
@@ -12,3 +13,15 @@ O programa depende de um arquivo .env que deve ter as seguintes variáveis:
 - <i>DATABASE_URL</i> (url da base dados para o prisma)
 - <i>DEFAULT_ADMIN_NAME</i> 
 - <i>DEFAULT_ADMIN_PASSWORD</i>
+<br>
+
+**A API conta com endpoints para:**
+
+- Gerenciamento de contas e autenticação
+- Registro de perfil com dados de localização (através da API de geocoding do google, e a API viacep) e preferência para adoção
+- Cadastro de pets
+- Sistema de "matching" para encontrar pets que se encaixam no perfil do usuário.
+- Envio e gerenciamento de pedidos de adoção para os pets
+- Criação de organizações de usuários, ONGs ou governamentais 
+- Criação de campanhas para arrecadação de dinheiro/recursos e adoção
+- Postagem de blogposts da campanha
